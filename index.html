@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A repository-grounded mini-course on nnsyn and 3D medical image synthesis.">
-  <title>Inside nnsyn · A Repository-Grounded Mini-Course</title>
+  <meta name="description" content="nnsyn: a self-configured framework for 3D image translation.">
+  <title>nnsyn: A Self-Configured Framework for 3D Image Translation</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,8 +12,8 @@
 
   <header class="hero" id="top">
     <nav class="topbar" aria-label="Primary navigation">
-      <a class="wordmark" href="#top" aria-label="Inside nnsyn home">
-        <span class="mark">n</span><span>inside <strong>nnsyn</strong></span>
+      <a class="wordmark" href="#top" aria-label="nnsyn mini-course home">
+        <span class="mark">n</span><span><strong>nnsyn</strong> mini-course</span>
       </a>
       <div class="top-actions">
         <a href="#course-map">Course map</a>
@@ -25,7 +25,7 @@
     <div class="hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">Repository-grounded medical image synthesis</p>
-        <h1>Inside <em>nnsyn</em></h1>
+        <h1><em>nnsyn</em><span>A self-configured framework for 3D image translation</span></h1>
         <p class="hero-lede">
           Learn what the repository does by following one aligned 3D MRI–CT case
           through data preparation, planning, training, inference, post-processing,
@@ -33,7 +33,7 @@
         </p>
         <div class="author-line" aria-label="Course authors and affiliation">
           <p><strong>Zaiyou He</strong><span> · </span><strong>Jun Ma</strong></p>
-          <p>Princess Margaret Cancer Centre &amp; AI Hub, University Health Network</p>
+          <p>Molecular Imaging, University Health Network, Toronto, Canada</p>
         </div>
         <div class="hero-actions">
           <a class="button" href="#course">Start the course <span aria-hidden="true">↓</span></a>
@@ -541,10 +541,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <h2>No single average explains<br>an entire 3D volume.</h2>
         <div class="prose"><p>Image metrics summarize intensity and structure, but they do not show where an error occurs. Visual panels reveal spatial failures, yet they can be cherry-picked. A responsible evaluation needs both.</p></div>
         <div class="metric-grid">
-          <article><span>MAE</span><h3>How large is the HU error?</h3><p>Directly interpretable and spatially blind.</p></article>
-          <article><span>PSNR</span><h3>How strong is signal relative to error?</h3><p>Higher is better; the intensity range matters.</p></article>
-          <article><span>MS-SSIM</span><h3>How similar is multiscale structure?</h3><p>Structure-aware, but can hide HU errors.</p></article>
-          <article><span>Dice / HD95</span><h3>Is derived anatomy geometrically preserved?</h3><p>Requires anatomical labels or segmentations; it is not automatic for every nnsyn dataset.</p></article>
+          <article><span>MAE</span><h3>How large is the HU error?</h3><code class="metric-formula">MAE = (1/N) Σ |p<sub>i</sub> − t<sub>i</sub>|</code><p>Average absolute voxel error; lower is better.</p></article>
+          <article><span>PSNR</span><h3>How strong is signal relative to error?</h3><code class="metric-formula">PSNR = 20 log<sub>10</sub>(R / √MSE)</code><p>R is the stated intensity range; higher is better.</p></article>
+          <article><span>MS-SSIM</span><h3>How similar is multiscale structure?</h3><code class="metric-formula">MS-SSIM = l<sub>M</sub><sup>α</sup> ∏ c<sub>j</sub><sup>β</sup>s<sub>j</sub><sup>γ</sup></code><p>Combines luminance, contrast, and structure across scales; higher is better.</p></article>
+          <article><span>Dice / HD95</span><h3>Is derived anatomy geometrically preserved?</h3><code class="metric-formula">Dice = 2|A ∩ B| / (|A| + |B|)<br>HD95 = P<sub>95</sub>(surface distances)</code><p>Dice is higher-is-better; HD95 is lower-is-better. Both require anatomical labels or segmentations.</p></article>
         </div>
 
         <div class="case-thread">
@@ -629,18 +629,18 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="resource-grid">
         <article><span>01</span><h3>Reproduce the walkthrough</h3><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md">Start with the verified code guide</a><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/ENVIRONMENT.md">See the tested environment</a></article>
         <article><span>02</span><h3>Data &amp; external application</h3><a href="https://synthrad2025.grand-challenge.org/data/">SynthRAD2025 data</a><a href="https://huggingface.co/aehrc/synthrad2025_docker">AEHRC SynthRAD2025 release</a></article>
-        <article><span>03</span><h3>Primary sources</h3><a href="https://github.com/aehrc/nnsyn">aehrc/nnsyn repository</a><a href="https://synthrad2025.grand-challenge.org/">SynthRAD2025</a><a href="https://miccai-sb.github.io/challenge">MICCAI Educational Challenge</a></article>
+        <article><span>03</span><h3>Primary sources</h3><a href="https://github.com/aehrc/nnsyn">aehrc/nnsyn repository</a><a href="https://synthrad2025.grand-challenge.org/">SynthRAD2025</a></article>
       </div>
       <div class="disclosure">
-        <div><p class="label">AI assistance disclosure</p><p>OpenAI Codex and Anthropic Claude were used to assist with source inspection, debugging, explanatory drafting and editing, course-support scripts, figure generation, and website implementation. The authors selected the data, ran the experiments, checked the outputs, set the claim boundaries, and reviewed the final material.</p></div>
+        <div><p class="label">AI assistance disclosure</p><p>OpenAI Codex and Anthropic Claude assisted with drafting, code review, debugging, and website development. The authors ran and verified the experiments and reviewed the final content.</p></div>
         <div><p class="label">Attribution</p><p>nnsyn is distributed under Apache License 2.0 and builds on nnU-Net and related open-source work. Dataset use must follow its original access and licence conditions. Figures derived from the public teaching subset are labeled as such.</p></div>
       </div>
     </section>
   </main>
 
   <footer>
-    <a class="wordmark" href="#top"><span class="mark">n</span><span>inside <strong>nnsyn</strong></span></a>
-    <p>Zaiyou He · Jun Ma · Princess Margaret Cancer Centre &amp; AI Hub, University Health Network · 2026</p>
+    <a class="wordmark" href="#top"><span class="mark">n</span><span><strong>nnsyn</strong> mini-course</span></a>
+    <p>Zaiyou He · Jun Ma · Molecular Imaging, University Health Network · 2026</p>
     <a href="#top">Back to top ↑</a>
   </footer>
   <script src="app.js"></script>
