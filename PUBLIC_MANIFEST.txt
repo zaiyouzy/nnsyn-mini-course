@@ -6,17 +6,26 @@ once this folder is pushed. Read the list before publishing.
 
   .nojekyll                                              0.0 KB  e3b0c44298fc
   app.js                                                 0.7 KB  3fe909a1246e
-  figures/fig01_mr_ct_mask_triplanar.png               795.0 KB  8b6b8ca26301
-  figures/fig02_normalization_histograms.png           145.5 KB  f4e928aa075d
-  figures/fig03_training_patch.png                     408.4 KB  b0ae1af8847b
-  figures/fig04_seg_npy_is_continuous.png              111.5 KB  c902c4c985b0
-  figures/fig05_alignment_checkerboard.png             457.8 KB  0daff0c51835
+  code/ENVIRONMENT.md                                    0.8 KB  09d3f85c3462
+  code/LICENSE-nnsyn.txt                                11.3 KB  b7fb45826701
+  code/make_course_figures.py                           15.2 KB  3abd85b755e9
+  code/patches/nnsyn_course_windows.patch                3.5 KB  e92bb1f92203
+  code/patches/nnUNetTrainer_nnsyn_smoke.py              0.8 KB  4d3b712ab9b3
+  code/README.md                                         7.1 KB  15394b8c8015
+  code/run_nnsyn_smoke_training.py                       4.0 KB  5d6c8cbf0987
+  code/run_smoke_inference.py                            8.2 KB  f27b3aea53c1
+  code/setup_course_env.ps1                              1.0 KB  a2d17bef2b06
+  figures/fig01_mr_ct_mask_triplanar.png               724.4 KB  28061c1b7df5
+  figures/fig02_normalization_histograms.png           151.9 KB  a296989eef61
+  figures/fig03_training_patch.png                     393.7 KB  2cbcc72e4486
+  figures/fig04_seg_npy_is_continuous.png               96.0 KB  bd2b424832df
+  figures/fig05_alignment_checkerboard.png             522.5 KB  761f8674a907
   figures/fig06_smoke_synthetic_ct.png                1075.4 KB  7697be98743e
-  index.html                                            43.3 KB  5e9f2a182dcb
-  styles.css                                            22.9 KB  9c3d0e75bb71
+  index.html                                            44.1 KB  78703554cbfd
+  styles.css                                            23.2 KB  17d4b39f8be1
   teaching-components.css                                3.2 KB  645d38ece60e
 
-  TOTAL                                               3063.7 KB
+  TOTAL                                               3087.0 KB
 
 NOT included in this release, by design:
   notebooks/      contain machine-specific absolute paths and a stale dataset id

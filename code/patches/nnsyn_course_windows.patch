@@ -1,0 +1,57 @@
+diff --git a/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py b/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py
+index d70fc1b..bee9976 100644
+--- a/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py
++++ b/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py
+@@ -1316,6 +1316,16 @@ class nnUNetTrainer(object):
+         import signal
+         from subprocess import call
+ 
++        # Automatic requeue is only relevant for jobs launched by Slurm. Local
++        # runs (including Windows, where SIGUSR1 is unavailable) should not
++        # install these signal handlers.
++        if 'SLURM_JOB_ID' not in os.environ:
++            print('Not running under Slurm; automatic job requeue is disabled.')
++            return
++        if not hasattr(signal, 'SIGUSR1'):
++            print('SIGUSR1 is unavailable; automatic Slurm job requeue is disabled.')
++            return
++
+         def call_resume():
+ 
+             job_id = os.environ['SLURM_JOB_ID']
+diff --git a/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked.py b/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked.py
+index 7d03cbe..5544c4e 100644
+--- a/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked.py
++++ b/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked.py
+@@ -16,7 +16,14 @@ from torch import autocast
+ import numpy as np
+ 
+ from nnunetv2.training.dataloading.nnunet_dataset import nnUNetDatasetMask
+-from nnunetv2.training.nnUNetTrainer.variants.nnsyn.nnUNetTrainer_nnsyn import nnUNetTrainer_nnsyn_track, nnUNetTrainer_nnsyn
++# mini-course fix: nnUNetTrainer_nnsyn_track was imported here but never used,
++# and it is not defined in nnUNetTrainer_nnsyn.py (it lives in
++# nnUNetTrainer_nnsyn_tracked.py). The dead import is harmless during training,
++# because the trainer class is imported directly, but it aborts nnU-Net's
++# recursive_find_python_class trainer discovery during inference. Restoring the
++# name from the correct module would create a circular import, since
++# nnUNetTrainer_nnsyn_tracked.py already imports this module.
++from nnunetv2.training.nnUNetTrainer.variants.nnsyn.nnUNetTrainer_nnsyn import nnUNetTrainer_nnsyn
+ 
+ 
+ class nnUNetTrainer_nnsyn_loss_masked(nnUNetTrainer_nnsyn):
+diff --git a/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked_anatomical_perception.py b/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked_anatomical_perception.py
+index b794331..0cc6995 100644
+--- a/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked_anatomical_perception.py
++++ b/nnunetv2/training/nnUNetTrainer/variants/nnsyn/nnUNetTrainer_nnsyn_loss_masked_anatomical_perception.py
+@@ -3,7 +3,10 @@ from typing import Union, Tuple, List
+ import numpy as np
+ from nnunetv2.training.loss.syn_perception_loss import SynPerceptionLoss, SynPerceptionLoss_L2
+ from nnunetv2.utilities.collate_outputs import collate_outputs
+-from nnunetv2.training.nnUNetTrainer.variants.nnsyn.nnUNetTrainer_nnsyn_loss_masked import nnUNetTrainer_nnsyn_loss_masked, nnUNetTrainer_nnsyn_loss_masked_track
++# mini-course fix: same dead-import problem as in nnUNetTrainer_nnsyn_loss_masked.py.
++# nnUNetTrainer_nnsyn_loss_masked_track is unused here and is defined in
++# nnUNetTrainer_nnsyn_tracked.py, not in the module named below.
++from nnunetv2.training.nnUNetTrainer.variants.nnsyn.nnUNetTrainer_nnsyn_loss_masked import nnUNetTrainer_nnsyn_loss_masked
+ from nnunetv2.training.nnUNetTrainer.variants.nnsyn.nnsyn_loss_map import MaskedAnatomicalPerceptionLoss
+ 
+ 

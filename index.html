@@ -31,6 +31,10 @@
           through data preparation, planning, training, inference, post-processing,
           and evaluation.
         </p>
+        <div class="author-line" aria-label="Course authors and affiliation">
+          <p><strong>Zaiyou He</strong><span> · </span><strong>Jun Ma</strong></p>
+          <p>Princess Margaret Cancer Centre &amp; AI Hub, University Health Network</p>
+        </div>
         <div class="hero-actions">
           <a class="button" href="#course">Start the course <span aria-hidden="true">↓</span></a>
           <a class="text-link" href="#repo-map">Open the repository map</a>
@@ -300,7 +304,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <p>Does z-score normalization make MRI values into Hounsfield units?</p>
           <details><summary>Show answer</summary><p>No. It creates a stable numerical range for learning. HU restoration applies only to the predicted CT using saved CT statistics.</p></details>
         </div>
-        <div class="notebook-link"><span>Companion practice</span><span class="link-pending">00 · inspect a paired case <em>(coming soon)</em></span><span class="link-pending">01 · prepare the dataset <em>(coming soon)</em></span></div>
+        <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#data-and-preprocessing">Data and preprocessing guide</a></div>
       </div>
     </section>
 
@@ -431,7 +435,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             </table>
           </div>
           <p>These are reported validation-leaderboard rows from the KoalAI algorithm description, not results from our smoke run and not a final-test benchmark. They illustrate why anatomical metrics may reveal changes that MAE alone does not.</p>
-          <span class="link-pending">Open the source PDF <em>(coming soon)</em></span>
+          <a href="https://huggingface.co/aehrc/synthrad2025_docker">Open the public SynthRAD2025 release</a>
         </div>
 
         <div class="checkpoint">
@@ -461,7 +465,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <article><p class="label">Course smoke run</p><h3>Execution check</h3><dl><div><dt>epochs</dt><dd>1</dd></div><div><dt>training iterations</dt><dd>2</dd></div><div><dt>validation iterations</dt><dd>1</dd></div><div><dt>purpose</dt><dd>verify the pipeline</dd></div></dl></article>
         </div>
         <div class="checkpoint"><strong>Do not confuse these runs.</strong><p>The baseline protocol is intended to learn. The smoke protocol is intentionally too short to support a quality claim.</p></div>
-        <div class="notebook-link"><span>Companion practice</span><span class="link-pending">02 · inspect the training protocol <em>(coming soon)</em></span></div>
+        <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#smoke-training">Verified smoke-training guide</a></div>
       </div>
     </section>
 
@@ -508,8 +512,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
 
         <div class="identity-lock"><strong>Model identity must match</strong><span>dataset ID</span><span>plan</span><span>configuration</span><span>trainer</span><span>fold</span><span>checkpoint</span><span>channels</span></div>
-        <div class="checkpoint"><strong>Check your understanding</strong><p>A prediction file with values around 0 is not necessarily blank. Before judging it, ask whether it is still normalized.</p></div>
-        <div class="notebook-link"><span>Companion practice</span><span class="link-pending">03 · predict, restore HU, and inspect output <em>(coming soon)</em></span></div>
+        <div class="checkpoint"><strong>Check your understanding</strong><p>The raw prediction contains values close to 0. Does that mean the synthetic CT is blank?</p><details><summary>Show answer</summary><p>No. The network predicts standardized CT values, where 0 is near the training-set mean. Apply the stored CT mean and standard deviation before interpreting the image in Hounsfield units.</p></details></div>
+        <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#inference-hu-restoration-and-evaluation">Inference and HU-restoration guide</a></div>
       </div>
     </section>
 
@@ -537,7 +541,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <div class="evaluation-rule"><strong>Minimum visual panel</strong><span>MRI input</span><span>synthetic CT</span><span>reference CT</span><span>absolute error</span><p>Inspect multiple anatomical slices and include failures, not only the best-looking example.</p></div>
         <div class="checkpoint"><strong>Evaluation rule</strong><p>Use the mask definition, HU restoration, metric implementation, and case split consistently. Otherwise two reported numbers may not describe the same experiment.</p></div>
-        <div class="notebook-link"><span>Companion practice</span><span class="link-pending">04 · calculate metrics and build the comparison panel <em>(coming soon)</em></span></div>
+        <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#rebuild-the-evidence-figures">Evaluation and figure-generation code</a></div>
       </div>
     </section>
 
@@ -604,20 +608,20 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
     <section class="resources section-pad" id="resources">
       <div class="section-intro"><p class="section-kicker">Continue learning</p><h2>Source, practice, and provenance.</h2></div>
       <div class="resource-grid">
-        <article><span>01</span><h3>Course content</h3><span class="link-pending">Read the content core <em>(coming soon)</em></span><span class="link-pending">See the slide blueprint <em>(coming soon)</em></span></article>
-        <article><span>02</span><h3>Evidence</h3><span class="link-pending">Verified facts and claim boundaries <em>(coming soon)</em></span><span class="link-pending">Figure plan and credits <em>(coming soon)</em></span></article>
+        <article><span>01</span><h3>Reproduce the walkthrough</h3><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md">Start with the verified code guide</a><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/ENVIRONMENT.md">See the tested environment</a></article>
+        <article><span>02</span><h3>Data &amp; external application</h3><a href="https://synthrad2025.grand-challenge.org/data/">SynthRAD2025 data</a><a href="https://huggingface.co/aehrc/synthrad2025_docker">AEHRC SynthRAD2025 release</a></article>
         <article><span>03</span><h3>Primary sources</h3><a href="https://github.com/aehrc/nnsyn">aehrc/nnsyn repository</a><a href="https://synthrad2025.grand-challenge.org/">SynthRAD2025</a><a href="https://miccai-sb.github.io/challenge">MICCAI Educational Challenge</a></article>
       </div>
       <div class="disclosure">
-        <div><p class="label">AI assistance disclosure</p><p>OpenAI Codex was used to help inspect source files, organize the course, draft and edit explanatory text, and implement the website. The local execution, medical-data observations, technical judgments, claim boundaries, and final author review remain the author’s responsibility.</p></div>
-        <div><p class="label">Attribution</p><p>nnsyn is distributed under Apache License 2.0 and builds on nnU-Net and related open-source work. Dataset use must follow its original access and licence conditions. Figures derived from the local teaching subset are labeled as such.</p></div>
+        <div><p class="label">AI assistance disclosure</p><p>OpenAI Codex and Anthropic Claude were used to assist with source inspection, debugging, explanatory drafting and editing, course-support scripts, figure generation, and website implementation. The authors selected the data, ran the experiments, checked the outputs, set the claim boundaries, and reviewed the final material.</p></div>
+        <div><p class="label">Attribution</p><p>nnsyn is distributed under Apache License 2.0 and builds on nnU-Net and related open-source work. Dataset use must follow its original access and licence conditions. Figures derived from the public teaching subset are labeled as such.</p></div>
       </div>
     </section>
   </main>
 
   <footer>
     <a class="wordmark" href="#top"><span class="mark">n</span><span>inside <strong>nnsyn</strong></span></a>
-    <p>Local course preview · repository-grounded teaching build · 2026</p>
+    <p>Zaiyou He · Jun Ma · Princess Margaret Cancer Centre &amp; AI Hub, University Health Network · 2026</p>
     <a href="#top">Back to top ↑</a>
   </footer>
   <script src="app.js"></script>
