@@ -539,12 +539,12 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">Numbers and images answer different questions</p>
         <h2>No single average explains<br>an entire 3D volume.</h2>
-        <div class="prose"><p>Image metrics summarize intensity and structure, but they do not show where an error occurs. Visual panels reveal spatial failures, yet they can be cherry-picked. A responsible evaluation needs both.</p></div>
+        <div class="prose"><p>Image metrics summarize intensity and structure, but they do not show where an error occurs. Visual panels reveal spatial failures, yet they can be cherry-picked. A responsible evaluation needs both.</p><p>Read the metrics in three layers: MAE and PSNR assess CT intensities, MS-SSIM assesses visual structure, and Dice and HD95 assess anatomy derived from segmentations.</p></div>
         <div class="metric-grid">
-          <article><span>MAE</span><h3>How large is the HU error?</h3><code class="metric-formula">MAE = (1/N) Σ |p<sub>i</sub> − t<sub>i</sub>|</code><p>Average absolute voxel error; lower is better.</p></article>
-          <article><span>PSNR</span><h3>How strong is signal relative to error?</h3><code class="metric-formula">PSNR = 20 log<sub>10</sub>(R / √MSE)</code><p>R is the stated intensity range; higher is better.</p></article>
-          <article><span>MS-SSIM</span><h3>How similar is multiscale structure?</h3><code class="metric-formula">MS-SSIM = l<sub>M</sub><sup>α</sup> ∏ c<sub>j</sub><sup>β</sup>s<sub>j</sub><sup>γ</sup></code><p>Combines luminance, contrast, and structure across scales; higher is better.</p></article>
-          <article><span>Dice / HD95</span><h3>Is derived anatomy geometrically preserved?</h3><code class="metric-formula">Dice = 2|A ∩ B| / (|A| + |B|)<br>HD95 = P<sub>95</sub>(surface distances)</code><p>Dice is higher-is-better; HD95 is lower-is-better. Both require anatomical labels or segmentations.</p></article>
+          <article><span>MAE</span><h3>How wrong are the CT values?</h3><code class="metric-formula">MAE = (1/N) ∑ |p<sub>i</sub> − t<sub>i</sub>|</code><p>Average HU difference at the evaluated voxels. MAE = 100 HU means an average error of 100 HU per voxel. Lower is better.</p></article>
+          <article><span>PSNR</span><h3>How small is the error relative to the image range?</h3><code class="metric-formula">PSNR = 20 log<sub>10</sub>(R / √MSE)</code><p>Compares reconstruction error with the stated CT intensity range R. Higher means less error relative to that range.</p></article>
+          <article><span>MS-SSIM</span><h3>Is structure preserved at different scales?</h3><code class="metric-formula">MS-SSIM = l<sub>M</sub><sup>α</sup> ∏ c<sub>j</sub><sup>β</sup>s<sub>j</sub><sup>γ</sup></code><p>Compares brightness, contrast, and structural patterns from fine details to larger regions. Values closer to 1 mean more similar structure.</p></article>
+          <article><span>Dice / HD95</span><h3>Is the anatomy geometrically preserved?</h3><code class="metric-formula">Dice = 2|A ∩ B| / (|A| + |B|)<br>HD95 = P<sub>95</sub>(surface distances)</code><p>Dice measures region overlap: 1 is perfect. HD95 measures how far apart most boundaries are, usually in millimetres. Both require segmentations; Dice higher and HD95 lower are better.</p></article>
         </div>
 
         <div class="case-thread">

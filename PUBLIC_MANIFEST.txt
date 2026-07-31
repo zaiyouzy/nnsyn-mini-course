@@ -21,11 +21,11 @@ once this folder is pushed. Read the list before publishing.
   figures/fig04_seg_npy_is_continuous.png               96.0 KB  bd2b424832df
   figures/fig05_alignment_checkerboard.png             522.5 KB  761f8674a907
   figures/fig06_smoke_synthetic_ct.png                1075.4 KB  7697be98743e
-  index.html                                            45.6 KB  562dee31bd07
-  styles.css                                            25.6 KB  0f1a4ccb2cea
+  index.html                                            46.1 KB  101245bd053b
+  styles.css                                            25.6 KB  f42d4cea0c2e
   teaching-components.css                                3.3 KB  aea77d8f1a00
 
-  TOTAL                                               3137.1 KB
+  TOTAL                                               3137.5 KB
 
 NOT included in this release, by design:
   notebooks/      contain machine-specific absolute paths and a stale dataset id

@@ -38,14 +38,14 @@ button,summary,a{outline-offset:4px}
 .button{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;color:var(--navy);background:var(--mint);font-weight:750;text-decoration:none}
 .button:hover{background:var(--white)}
 .button-small{padding:9px 15px;font-size:14px}
-.hero-grid{max-width:var(--max);margin:auto;padding:76px 34px 90px;display:grid;grid-template-columns:minmax(380px,.78fr) minmax(500px,1.22fr);gap:56px;align-items:center}
+.hero-grid{max-width:var(--max);margin:auto;padding:76px 34px 90px;display:grid;grid-template-columns:minmax(395px,.82fr) minmax(500px,1.18fr);gap:52px;align-items:center}
 .eyebrow,.section-kicker,.label,.evidence-label{margin:0 0 12px;color:var(--teal);font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
 .hero .eyebrow,.chapter-dark .section-kicker{color:var(--mint)}
 .hero h1{margin:0;font:650 clamp(64px,8vw,112px)/.92 "Segoe UI",Arial,sans-serif;letter-spacing:-.06em}
 .hero h1 em{color:var(--mint);font-style:normal;font-weight:650}
-.hero h1>span{display:block;max-width:650px;margin-top:22px;color:var(--white);font-size:clamp(28px,3.2vw,44px);font-weight:560;line-height:1.12;letter-spacing:-.035em}
-.hero-lede{max-width:650px;margin:30px 0 20px;color:rgba(255,255,255,.76);font-size:21px;line-height:1.55}
-.author-line{margin:0 0 30px;padding-left:14px;border-left:2px solid rgba(204,227,220,.45)}
+.hero h1>span{display:block;max-width:650px;margin-top:22px;color:var(--white);font-size:clamp(28px,3.05vw,41px);font-weight:560;line-height:1.12;letter-spacing:-.035em}
+.hero-lede{max-width:650px;margin:26px 0 18px;color:rgba(255,255,255,.76);font-size:20px;line-height:1.55}
+.author-line{margin:0 0 26px;padding-left:14px;border-left:2px solid rgba(204,227,220,.45)}
 .author-line p{margin:0}.author-line p:first-child{color:var(--white);font-size:15px}.author-line p:last-child{margin-top:5px;color:rgba(255,255,255,.58);font-size:13px;line-height:1.45}
 .hero-actions{display:flex;align-items:center;gap:24px}
 .hero-meta{list-style:none;padding:0;margin:52px 0 0;display:flex;gap:34px;flex-wrap:wrap}
