@@ -58,6 +58,7 @@ INK = "#0f1419"
 PAPER = "#ffffff"
 ACCENT = "#1f6feb"
 WARM = "#d1495b"
+MASK_TEAL = "#45b8ad"
 
 plt.rcParams.update(
     {
@@ -137,8 +138,8 @@ def fig_mr_ct_mask(raw: dict[str, sitk.Image]) -> None:
             axes[r, c].contour(
                 mask_slices[c],
                 levels=[0.5],
-                colors=[WARM],
-                linewidths=1.8,
+                colors=[MASK_TEAL],
+                linewidths=1.6,
                 origin="lower",
             )
             if r == 0:
@@ -155,7 +156,7 @@ def fig_mr_ct_mask(raw: dict[str, sitk.Image]) -> None:
     fig.text(
         0.5,
         0.018,
-        f"orange contour = body-mask boundary  |  "
+        f"teal contour = body-mask boundary  |  "
         f"{mr.shape[2]} x {mr.shape[1]} x {mr.shape[0]} voxels  |  spacing "
         f"{spacing[0]:.0f} x {spacing[1]:.0f} x {spacing[2]:.0f} mm",
         ha="center",
