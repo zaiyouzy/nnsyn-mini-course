@@ -1,0 +1,26 @@
+PUBLIC MANIFEST
+==================================================================
+
+Every file listed below will become publicly readable on the internet
+once this folder is pushed. Read the list before publishing.
+
+  .nojekyll                                              0.0 KB  e3b0c44298fc
+  app.js                                                 0.7 KB  3fe909a1246e
+  figures/fig01_mr_ct_mask_triplanar.png               795.0 KB  8b6b8ca26301
+  figures/fig02_normalization_histograms.png           145.5 KB  f4e928aa075d
+  figures/fig03_training_patch.png                     408.4 KB  b0ae1af8847b
+  figures/fig04_seg_npy_is_continuous.png              111.5 KB  c902c4c985b0
+  figures/fig05_alignment_checkerboard.png             457.8 KB  0daff0c51835
+  figures/fig06_smoke_synthetic_ct.png                1075.4 KB  7697be98743e
+  index.html                                            43.3 KB  5e9f2a182dcb
+  styles.css                                            22.9 KB  9c3d0e75bb71
+  teaching-components.css                                3.2 KB  645d38ece60e
+
+  TOTAL                                               3063.7 KB
+
+NOT included in this release, by design:
+  notebooks/      contain machine-specific absolute paths and a stale dataset id
+  content/*.md    internal course planning, names internal staff
+  sample slides/  colleagues' internal decks
+  _demo_*.html    working experiments
+  dataset/, nnsyn_workspace/, .venv-nnsyn/   data, checkpoints, environment
