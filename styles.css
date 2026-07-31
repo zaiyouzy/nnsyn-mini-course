@@ -191,6 +191,7 @@ blockquote{margin:42px 0 0;padding:26px 30px;border-left:4px solid var(--teal);b
 
 .resources{display:block}.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}.resource-grid article{padding:25px;border:1px solid var(--line);border-radius:var(--radius)}.resource-grid>article>span{color:var(--teal);font:12px "Cascadia Code",monospace}.resource-grid h3{font:27px Georgia,serif}.resource-grid a{display:block;margin:8px 0}
 .disclosure{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px;padding-top:26px;border-top:1px solid var(--line)}.disclosure p:last-child{color:var(--muted);font-size:14px}
+.references{display:block}.reference-list{max-width:980px;margin:38px 0 0;padding-left:28px}.reference-list li{margin:0;padding:17px 0 17px 10px;border-top:1px solid var(--line);line-height:1.65}.reference-list li:last-child{border-bottom:1px solid var(--line)}.reference-list a{overflow-wrap:anywhere}
 footer{padding:28px max(34px,calc((100vw - var(--max))/2 + 34px));display:flex;align-items:center;justify-content:space-between;gap:25px;color:rgba(255,255,255,.68);background:var(--navy-deep);font-size:14px}footer a{color:var(--white)}footer p{margin:0}
 
 @media(max-width:1050px){
