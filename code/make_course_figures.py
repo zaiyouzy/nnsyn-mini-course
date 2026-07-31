@@ -114,7 +114,7 @@ def show(ax, image: np.ndarray, *, vmin=None, vmax=None, cmap="gray", aspect=Non
 
 # ---------------------------------------------------------------- figure 01
 def fig_mr_ct_mask(raw: dict[str, sitk.Image]) -> None:
-    """One real abdomen case: MR input, paired CT target, body mask."""
+    """One real abdomen case: MR and paired CT with the body mask overlaid."""
     mr = sitk.GetArrayFromImage(raw["mr"]).astype(np.float32)
     ct = sitk.GetArrayFromImage(raw["ct"]).astype(np.float32)
     mask = sitk.GetArrayFromImage(raw["mask"]).astype(np.float32)
@@ -124,38 +124,45 @@ def fig_mr_ct_mask(raw: dict[str, sitk.Image]) -> None:
 
     mr_hi = float(np.percentile(mr[mask > 0], 99.5))
     rows = [
-        ("MR (input)", tri_planar(mr), dict(cmap="gray", vmin=0, vmax=mr_hi)),
-        ("CT (target)", tri_planar(ct), dict(cmap="gray", vmin=-200, vmax=300)),
-        ("Body mask", tri_planar(mask), dict(cmap="magma", vmin=0, vmax=1)),
+        ("MR + body mask", tri_planar(mr), dict(cmap="gray", vmin=0, vmax=mr_hi)),
+        ("CT + body mask", tri_planar(ct), dict(cmap="gray", vmin=-200, vmax=300)),
     ]
+    mask_slices = tri_planar(mask)
     views = ["Axial", "Coronal", "Sagittal"]
 
-    fig, axes = plt.subplots(3, 3, figsize=(11.5, 10.5))
+    fig, axes = plt.subplots(2, 3, figsize=(11.5, 7.4))
     for r, (label, slices, kw) in enumerate(rows):
         for c, image in enumerate(slices):
             show(axes[r, c], image, aspect=aspects[c], **kw)
+            axes[r, c].contour(
+                mask_slices[c],
+                levels=[0.5],
+                colors=[WARM],
+                linewidths=1.8,
+                origin="lower",
+            )
             if r == 0:
                 axes[r, c].set_title(views[c], fontsize=14, color=INK, pad=8)
         axes[r, 0].set_ylabel(label, fontsize=14, color=INK, labelpad=12)
         axes[r, 0].set_yticks([])
 
     fig.suptitle(
-        f"SynthRAD2025 Task 1 abdomen case {CASE}: one paired training example",
+        f"SynthRAD2025 Task 1 abdomen case {CASE}: paired MR and CT with body-mask overlay",
         fontsize=16,
         color=INK,
         y=0.98,
     )
     fig.text(
         0.5,
-        0.015,
+        0.018,
+        f"orange contour = body-mask boundary  |  "
         f"{mr.shape[2]} x {mr.shape[1]} x {mr.shape[0]} voxels  |  spacing "
-        f"{spacing[0]:.0f} x {spacing[1]:.0f} x {spacing[2]:.0f} mm  |  "
-        "MR, CT and mask share identical geometry",
+        f"{spacing[0]:.0f} x {spacing[1]:.0f} x {spacing[2]:.0f} mm",
         ha="center",
-        fontsize=12,
+        fontsize=11.5,
         color="#57606a",
     )
-    fig.tight_layout(rect=(0.02, 0.04, 1, 0.955))
+    fig.tight_layout(rect=(0.02, 0.055, 1, 0.95))
     fig.savefig(FIGURES / "fig01_mr_ct_mask_triplanar.png", dpi=170)
     plt.close(fig)
 
