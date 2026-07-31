@@ -43,7 +43,7 @@ $trainerDestination = ".\nnsyn\nnunetv2\training\nnUNetTrainer\variants\nnsyn\nn
 Copy-Item .\code\patches\nnUNetTrainer_nnsyn_smoke.py $trainerDestination
 ```
 
-The patch disables Slurm-only signals during local runs and removes two unused imports that stop inference-time trainer discovery. It does not change the network, loss, or reconstruction.
+The patch disables Slurm-only signals during local runs and removes two unused imports that stop inference-time trainer discovery. It does not change the network, loss, or reconstruction. It was generated against nnsyn commit `c3ba6fd8b32f62779f299f78b7d78a96b7fd7695`. If Windows line endings cause whitespace-only conflicts, retry with `git -C nnsyn apply --ignore-whitespace ..\code\patches\nnsyn_course_windows.patch`; do not use that option to hide substantive conflicts on another commit.
 
 ## Data and preprocessing
 

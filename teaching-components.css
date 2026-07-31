@@ -23,13 +23,13 @@
 .data-card{padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
 .data-card h3{margin:7px 0 16px;font:25px/1.2 Georgia,serif}
 .data-card>p:last-child{margin:14px 0 0;color:var(--muted);font-size:14px;line-height:1.55}
-.proportion-bar{height:86px;display:flex;overflow:hidden;border-radius:9px;color:var(--white)}
+.proportion-bar{height:70px;display:flex;overflow:hidden;border:1px solid var(--line);border-radius:9px;color:var(--ink)}
 .proportion-bar span{padding:12px;display:grid;place-content:center;text-align:center}
-.proportion-bar span:first-child{width:44.15%;background:var(--teal)}
-.proportion-bar span:last-child{width:55.85%;background:var(--navy)}
+.proportion-bar span:first-child{width:44.15%;background:rgba(45,125,120,.18)}
+.proportion-bar span:last-child{width:55.85%;background:var(--paper)}
 .proportion-bar strong,.proportion-bar small{display:block}
-.proportion-bar strong{font:26px Georgia,serif}
-.proportion-bar small{margin-top:4px;color:rgba(255,255,255,.76)}
+.proportion-bar strong{font:650 24px "Segoe UI",Arial,sans-serif;font-variant-numeric:lining-nums tabular-nums}
+.proportion-bar small{margin-top:4px;color:var(--muted)}
 .transition-note{margin:22px 0;padding:15px 20px;display:flex;align-items:center;gap:20px;border-radius:10px;color:var(--white);background:var(--navy)}
 .transition-note span{flex:0 0 auto;color:var(--mint);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
 .transition-note strong{font-size:15px;line-height:1.45}

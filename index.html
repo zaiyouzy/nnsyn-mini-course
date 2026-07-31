@@ -39,11 +39,7 @@
           <a class="button" href="#course">Start the course <span aria-hidden="true">↓</span></a>
           <a class="text-link" href="#repo-map">Open the repository map</a>
         </div>
-        <ul class="hero-meta" aria-label="Course facts">
-          <li><strong>Repo first</strong><span>concepts tied to code</span></li>
-          <li><strong>One case</strong><span>real public data</span></li>
-          <li><strong>End to end</strong><span>files to evaluation</span></li>
-        </ul>
+
       </div>
 
       <figure class="hero-scan">
@@ -95,14 +91,10 @@
         </ul>
       </aside>
 
-      <div class="course-thesis" aria-label="The three questions that organize the course">
-        <article><span>01</span><h3>What goes in and out?</h3><p>Aligned MRI, target CT, a body mask, and optional anatomical labels.</p></article>
-        <article><span>02</span><h3>How does it learn?</h3><p>A planned 3D network learns from paired patches under a synthesis loss.</p></article>
-        <article><span>03</span><h3>When is the output usable?</h3><p>After matched inference, HU restoration, masking, and honest evaluation.</p></article>
-      </div>
+
     </section>
 
-    <section class="chapter chapter-dark" id="task" data-chapter="01">
+    <section class="chapter chapter-tint" id="task" data-chapter="01">
       <div class="chapter-side"><span class="chapter-no">01</span><p>Clinical task</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Why synthesize CT from MRI?</p>
@@ -122,7 +114,7 @@
           </p>
         </div>
 
-        <figure class="teaching-figure teaching-figure-dark">
+        <figure class="teaching-figure">
           <img src="figures/fig01_mr_ct_mask_triplanar.png"
                alt="Aligned abdomen MRI, CT, and body-mask views for case 1ABA033">
           <figcaption><strong>Read the case from top to bottom.</strong> MRI is the source, CT is the numerical target, and the mask identifies the body region. The three columns show the same case in different anatomical planes. · Local public-data teaching subset, case 1ABA033</figcaption>
@@ -152,22 +144,23 @@
           </dl>
         </div>
 
-        <div class="evidence evidence-dark">
+        <div class="evidence">
           <span class="evidence-label">Training assumption</span>
           <div><strong>MR and CT must describe the same anatomy at the same coordinates.</strong><p>Otherwise voxel-wise error mixes registration error with synthesis error.</p></div>
         </div>
 
-        <figure class="teaching-figure teaching-figure-dark compact-figure">
+        <figure class="teaching-figure compact-figure">
           <img src="figures/fig05_alignment_checkerboard.png"
                alt="Checkerboard view alternating aligned MR and CT regions">
           <figcaption>Checkerboard inspection helps reveal obvious spatial mismatch. It is a visual check, not a formal guarantee of registration quality.</figcaption>
         </figure>
 
-        <div class="checkpoint checkpoint-dark">
+        <div class="checkpoint">
           <strong>Check your understanding</strong>
           <p>If the CT is shifted five voxels to the right, what does a voxel-wise loss measure?</p>
           <details><summary>Show answer</summary><p>Both synthesis error and misalignment. The target at a coordinate no longer represents the same anatomy.</p></details>
         </div>
+        <p class="chapter-next">Now that the task is defined, the next question is how nnsyn turns it into a complete experiment.</p>
       </div>
     </section>
 
@@ -185,14 +178,25 @@
           </p>
         </div>
 
-        <div class="comparison">
-          <article><p class="label">Inherited infrastructure</p><h3>nnU-Net-style pipeline</h3><ul><li>dataset fingerprint and plans</li><li>3D patch sampling</li><li>folds and checkpoints</li><li>sliding-window inference</li></ul></article>
-          <article><p class="label">Synthesis adaptations</p><h3>nnsyn</h3><ul><li>paired source and target volumes</li><li>continuous regression targets</li><li>mask-aware and anatomical losses</li><li>HU restoration and image metrics</li></ul></article>
+        <div class="framework-flow" aria-label="How nnsyn is built">
+          <article><span>Starting point</span><strong>nnU-Net experiment pipeline</strong><small>planning, patch training, folds, checkpoints, inference</small></article>
+          <b aria-hidden="true">+</b>
+          <article><span>Changed for synthesis</span><strong>Continuous image regression</strong><small>paired images, synthesis losses, HU restoration, image metrics</small></article>
+          <b aria-hidden="true">=</b>
+          <article><span>Result</span><strong>nnsyn</strong><small>a self-configuring framework for paired 3D image synthesis</small></article>
         </div>
 
-        <div class="tensor-compare">
-          <article><p class="label">Segmentation</p><code>[B, C<sub>in</sub>, D, H, W] → [B, K, D, H, W]</code><p>K class scores per voxel.</p></article>
-          <article><p class="label">nnsyn synthesis</p><code>[B, C<sub>in</sub>, D, H, W] → [B, 1, D, H, W]</code><p>One continuous target value per voxel. Dataset501 has C<sub>in</sub> = 1.</p></article>
+        <div class="evidence evidence-table">
+          <span class="evidence-label">The decisive output change</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Task</th><th>Output tensor</th><th>Meaning at each voxel</th></tr></thead>
+              <tbody>
+                <tr><td>Segmentation</td><td><code>[B, K, D, H, W]</code></td><td>K class scores</td></tr>
+                <tr><td>nnsyn synthesis</td><td><code>[B, 1, D, H, W]</code></td><td>one continuous target value</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div id="repo-map" class="repo-map">
@@ -208,6 +212,7 @@
         </div>
 
         <div class="checkpoint"><strong>Chapter takeaway</strong><p>nnsyn is not one fixed U-Net. It is a framework that converts dataset properties into a reproducible synthesis experiment.</p></div>
+        <p class="chapter-next">That experiment begins with paired files and a plan derived from their properties.</p>
       </div>
     </section>
 
@@ -305,6 +310,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <details><summary>Show answer</summary><p>No. It creates a stable numerical range for learning. HU restoration applies only to the predicted CT using saved CT statistics.</p></details>
         </div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#data-and-preprocessing">Data and preprocessing guide</a></div>
+        <p class="chapter-next">Once the plan fixes spacing, patch size, and network depth, we can follow a patch through the model.</p>
       </div>
     </section>
 
@@ -353,6 +359,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <figure class="teaching-figure"><img src="figures/fig03_training_patch.png" alt="A 3D MRI volume with a highlighted training patch"><figcaption>Dataset501 patch view · 56 × 160 × 224 voxels · one training sample is smaller than the full scan</figcaption></figure>
         <div class="checkpoint"><strong>Architecture scope</strong><p>The local smoke plan used a six-stage PlainConvUNet. nnsyn can also plan other architectures, including residual-encoder and MedNeXt variants.</p></div>
+        <p class="chapter-next">The architecture produces a CT prediction; the loss determines which prediction counts as better.</p>
       </div>
     </section>
 
@@ -370,6 +377,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             features inside a frozen segmentation network?
           </p>
         </div>
+
+        <p class="concept-line"><strong>The progression:</strong> MSE defines the numerical error <span>→</span> masking decides where that error can teach the network <span>→</span> MAP also compares anatomical features.</p>
 
         <div class="symbol-strip"><span><strong>p<sub>i</sub></strong> prediction</span><span><strong>t<sub>i</sub></strong> target</span><span><strong>m<sub>i</sub></strong> mask</span><span><strong>N</strong> all patch voxels</span></div>
 
@@ -389,6 +398,11 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
               training patches contain different body fractions. Multiplying by the mask makes
               outside-body terms zero, so those voxels do not produce gradients.
             </p>
+            <div class="proportion-bar" aria-label="Body mask covers 44.15 percent of the volume; 55.85 percent lies outside the body">
+              <span><strong>44.15%</strong><small>inside body</small></span>
+              <span><strong>55.85%</strong><small>outside body</small></span>
+            </div>
+            <p class="data-caption">Why show this split? Masked MSE keeps the body region in the error numerator and sets the larger outside region to zero.</p>
             <p>
               The repository still averages over all <em>N</em> patch voxels, not only
               <em>Σm<sub>i</sub></em> foreground voxels. For one fixed patch, changing the
@@ -443,6 +457,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <p>If w = 0.5, must perception loss and image loss contribute equally sized gradients?</p>
           <details><summary>Show answer</summary><p>No. The coefficients are equal, but the terms can have different scales and gradient magnitudes.</p></details>
         </div>
+        <p class="chapter-next">With the objective defined, training can repeatedly use it to update the synthesis network.</p>
       </div>
     </section>
 
@@ -466,6 +481,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
         <div class="checkpoint"><strong>Do not confuse these runs.</strong><p>The baseline protocol is intended to learn. The smoke protocol is intentionally too short to support a quality claim.</p></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#smoke-training">Verified smoke-training guide</a></div>
+        <p class="chapter-next">A checkpoint is only useful when inference reconstructs the same experiment and restores the CT scale.</p>
       </div>
     </section>
 
@@ -514,6 +530,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <div class="identity-lock"><strong>Model identity must match</strong><span>dataset ID</span><span>plan</span><span>configuration</span><span>trainer</span><span>fold</span><span>checkpoint</span><span>channels</span></div>
         <div class="checkpoint"><strong>Check your understanding</strong><p>The raw prediction contains values close to 0. Does that mean the synthetic CT is blank?</p><details><summary>Show answer</summary><p>No. The network predicts standardized CT values, where 0 is near the training-set mean. Apply the stored CT mean and standard deviation before interpreting the image in Hounsfield units.</p></details></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#inference-hu-restoration-and-evaluation">Inference and HU-restoration guide</a></div>
+        <p class="chapter-next">After HU restoration, metrics and images can evaluate different aspects of the same prediction.</p>
       </div>
     </section>
 
@@ -542,6 +559,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <div class="evaluation-rule"><strong>Minimum visual panel</strong><span>MRI input</span><span>synthetic CT</span><span>reference CT</span><span>absolute error</span><p>Inspect multiple anatomical slices and include failures, not only the best-looking example.</p></div>
         <div class="checkpoint"><strong>Evaluation rule</strong><p>Use the mask definition, HU restoration, metric implementation, and case split consistently. Otherwise two reported numbers may not describe the same experiment.</p></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#rebuild-the-evidence-figures">Evaluation and figure-generation code</a></div>
+        <p class="chapter-next">The small run in the next chapter shows which parts of this pipeline were actually executed.</p>
       </div>
     </section>
 
@@ -573,10 +591,11 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             <p><strong>Visible seams:</strong> strong jumps coincide with internal tile boundaries, including y = 62, 160, 222, 285 and x = 80, 239. This is a useful view of sliding-window behavior, not a quality result.</p>
           </div>
         </details>
+        <p class="chapter-next">The final section condenses the pipeline into the ideas a learner should be able to explain.</p>
       </div>
     </section>
 
-    <section class="chapter chapter-dark" id="quiz" data-chapter="10">
+    <section class="chapter" id="quiz" data-chapter="10">
       <div class="chapter-side"><span class="chapter-no">10</span><p>Takeaways</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Close the loop</p>
