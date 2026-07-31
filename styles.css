@@ -46,7 +46,7 @@ button,summary,a{outline-offset:4px}
 .hero h1>span{display:block;max-width:650px;margin-top:22px;color:var(--white);font-size:clamp(28px,3.05vw,41px);font-weight:560;line-height:1.12;letter-spacing:-.035em}
 .hero-lede{max-width:650px;margin:26px 0 18px;color:rgba(255,255,255,.76);font-size:20px;line-height:1.55}
 .author-line{margin:0 0 26px;padding-left:14px;border-left:2px solid rgba(204,227,220,.45)}
-.author-line p{margin:0}.author-line p:first-child{color:var(--white);font-size:15px}.author-line p:last-child{margin-top:5px;color:rgba(255,255,255,.58);font-size:13px;line-height:1.45}
+.author-line p{margin:0}.author-line .author-names{margin-bottom:5px;color:var(--white);font-size:15px}.author-line .affiliation{color:rgba(255,255,255,.58);font-size:13px;line-height:1.45}.author-line sup,footer sup{font-size:.68em;line-height:0;vertical-align:super}
 .hero-actions{display:flex;align-items:center;gap:24px}
 .hero-meta{list-style:none;padding:0;margin:52px 0 0;display:flex;gap:34px;flex-wrap:wrap}
 .hero-meta li{padding-left:13px;border-left:2px solid rgba(204,227,220,.45);display:flex;flex-direction:column}
