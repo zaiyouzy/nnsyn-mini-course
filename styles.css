@@ -76,7 +76,7 @@ button,summary,a{outline-offset:4px}
 .course-thesis h3,.process-grid h3{margin:12px 0 7px;font:25px/1.2 Georgia,serif}
 .course-thesis p,.process-grid p{margin:0;color:var(--muted);font-size:15px}
 
-.chapter{max-width:var(--max);margin:auto;padding:110px 34px;display:grid;grid-template-columns:120px minmax(0,1fr);gap:58px}
+.chapter{max-width:var(--max);margin:auto;padding:100px 34px;display:grid;grid-template-columns:120px minmax(0,1fr);gap:58px}
 .chapter-tint{max-width:none;padding-left:max(34px,calc((100vw - var(--max))/2 + 34px));padding-right:max(34px,calc((100vw - var(--max))/2 + 34px));background:var(--paper)}
 .chapter-dark{max-width:none;padding-left:max(34px,calc((100vw - var(--max))/2 + 34px));padding-right:max(34px,calc((100vw - var(--max))/2 + 34px));color:var(--white);background:var(--navy)}
 .chapter-side{position:sticky;top:32px;align-self:start;height:max-content;padding-top:5px}

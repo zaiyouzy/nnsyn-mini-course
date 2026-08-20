@@ -63,8 +63,9 @@
         <p class="section-kicker">Course map</p>
         <h2>Course structure</h2>
         <p>
-          The chapters follow the order in which nnsyn turns paired medical images into a
-          planned experiment and, eventually, an evaluable synthetic CT.
+          The chapters follow the nnsyn workflow. We begin with the MRI-to-CT task,
+          then follow the data through planning, preprocessing, the network, training,
+          inference, and evaluation.
         </p>
       </div>
 
@@ -85,9 +86,9 @@
         <p class="label">By the end, you can</p>
         <ul>
           <li>Explain the role of MRI, CT, masks, and optional anatomical labels.</li>
-          <li>Trace a case through origin, raw, preprocessed, results, and prediction folders.</li>
+          <li>Follow one MRI–CT case from its original files to preprocessed arrays, a saved checkpoint, and the synthetic CT.</li>
           <li>Explain the plan, 3D model, losses, training, inference, and post-processing.</li>
-          <li>Separate an execution check from a performance experiment.</li>
+          <li>Explain why a short execution check can show that the pipeline runs but cannot measure model quality.</li>
         </ul>
       </aside>
 
@@ -108,9 +109,9 @@
             radiotherapy dose calculation.
           </p>
           <p>
-            An MRI-only workflow would be simpler if CT information could be estimated from the
-            MRI. The goal is therefore not to make a CT-looking picture. It is to predict a
-            spatially aligned volume whose values behave like CT.
+            An MRI-only workflow becomes possible if CT information can be estimated from the
+            MRI. The model predicts a CT volume aligned with the MRI, with one estimated CT
+            value at every voxel.
           </p>
         </div>
 
@@ -170,10 +171,11 @@
         <h2>How nnsyn adapts nnU-Net for image synthesis</h2>
         <div class="prose">
           <p>
-            nnsyn is a self-configuring framework for paired 3D medical image synthesis.
-            It inherits nnU-Net’s practical pipeline—dataset fingerprints, experiment plans,
-            patch training, folds, checkpoints, and sliding-window inference—then changes the
-            target from discrete classes to continuous image values.
+            Chapter 01 defined the task: use an aligned MRI to estimate a CT value at each voxel.
+            nnsyn organizes the complete experiment around that task. It keeps the main nnU-Net
+            workflow for measuring the dataset, creating a plan, training on patches, saving
+            checkpoints, and reconstructing a full volume. It adapts that workflow so the network
+            predicts continuous image values instead of segmentation classes.
           </p>
         </div>
 
@@ -198,6 +200,8 @@
           </div>
         </div>
 
+        <div class="prose"><p>The diagram gives the high-level view. In the code, these jobs are divided across several files. The map below shows which file answers each course question.</p></div>
+
         <div id="repo-map" class="repo-map">
           <div class="repo-title"><strong>Read the repository by question</strong><small>Each link opens the relevant source area.</small></div>
           <div class="repo-list">
@@ -210,8 +214,7 @@
           </div>
         </div>
 
-        <div class="checkpoint"><strong>Chapter takeaway</strong><p>nnsyn is not one fixed U-Net. It is a framework that converts dataset properties into a reproducible synthesis experiment.</p></div>
-        <p class="chapter-next">The next chapters follow the files, plan, network, and training loop used in that experiment.</p>
+        <div class="checkpoint"><strong>Chapter takeaway</strong><p>The dataset fingerprint determines the experiment plan, and the plan determines which network is built and how it is trained.</p></div>
       </div>
     </section>
 
@@ -223,9 +226,9 @@
 
         <div class="prose">
           <p>
-            nnsyn cannot learn from a loose folder of scans. It needs a case identity shared by
-            the source image, target image, and mask. Preprocessing then converts these readable
-            medical-image files into arrays that every training run can interpret consistently.
+            Self-configuration starts with organized data. For each case, nnsyn matches the MRI,
+            reference CT, and mask using one case ID. It then converts these files into normalized
+            arrays and creates a training plan from the measured dataset properties.
           </p>
         </div>
 
@@ -326,10 +329,11 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <div class="prose">
           <p>
-            A voxel’s CT value cannot always be inferred from one MRI voxel. The network needs
-            surrounding anatomy: where the voxel is, which tissue surrounds it, and how large
-            structures relate to one another. The encoder increases this context by reducing
-            spatial resolution while increasing the number of learned feature channels.
+            The plan from Chapter 03 fixes the patch size and network depth. The network then uses
+            one MRI patch to predict one CT value at every location in the matching output patch.
+            A single MRI voxel is usually not enough, so the network also needs surrounding anatomy.
+            The encoder builds this wider context by reducing spatial resolution while increasing
+            the number of learned feature channels.
           </p>
           <p>
             The decoder restores the original resolution. Skip connections bring higher-resolution
@@ -374,10 +378,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <div class="prose">
           <p>
-            Training repeatedly compares predicted CT with reference CT. A voxel loss rewards
-            numerical agreement. A mask can restrict attention to the body. MAP loss adds a
-            second question: do predicted and reference CT also produce similar anatomical
-            features inside a frozen segmentation network?
+            The network from Chapter 04 produces a CT patch. During training, the loss measures
+            how far that prediction is from the reference CT and provides the signal used to update
+            the network. MSE compares voxel values, masking limits the comparison to the body, and
+            MAP also compares anatomical features.
           </p>
         </div>
 
@@ -468,7 +472,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">From one update to a checkpoint</p>
         <h2>One training iteration, step by step</h2>
-        <div class="prose"><p>Each iteration samples aligned patches, predicts normalized CT, evaluates the selected loss, sends gradients backward, and updates the synthesis network. Validation and checkpoints turn those repeated updates into a traceable experiment.</p></div>
+        <div class="prose"><p>Once the loss is defined, training can update the network. Each iteration loads aligned patches, predicts normalized CT, computes the loss, backpropagates the error, and changes the weights. Validation and checkpoints record how the run progresses.</p></div>
         <ol class="process-grid process-six">
           <li><span>1</span><h3>Load</h3><p>MRI, target CT, and optional mask patches.</p></li>
           <li><span>2</span><h3>Forward</h3><p>MRI patch → predicted normalized CT.</p></li>
@@ -483,7 +487,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
         <div class="checkpoint"><strong>The baseline and smoke runs serve different purposes.</strong><p>The baseline protocol is intended to learn. The smoke protocol is intentionally too short to support a quality claim.</p></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#smoke-training">Verified smoke-training guide</a></div>
-        <p class="chapter-next">The saved checkpoint is then used to predict a complete CT volume and restore its physical intensity scale.</p>
       </div>
     </section>
 
@@ -494,10 +497,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <h2>Reconstructing the full CT volume</h2>
         <div class="prose">
           <p>
-            The full scan is larger than the training patch. At inference, overlapping windows
-            move through the volume. Their predictions are blended so that every voxel receives
-            one normalized CT value. A matching plan, trainer, fold, and checkpoint are essential:
-            inference is meaningful only when it reconstructs the model that produced the weights.
+            Training produces a checkpoint that can predict one patch at a time. The full MRI is
+            larger than that patch, so inference moves overlapping windows through the scan and
+            blends their predictions into one normalized CT volume. The plan, trainer, fold, and
+            checkpoint must match the training run so that the correct model is reconstructed.
           </p>
         </div>
 
@@ -540,7 +543,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">Numbers and images answer different questions</p>
         <h2>How synthetic CT is evaluated</h2>
-        <div class="prose"><p>Image metrics summarize intensity and structure, but they do not show where an error occurs. Visual panels reveal spatial failures, yet they can be cherry-picked. Use both: metrics summarize overall error, while images show where it occurs.</p><p>Read the metrics in three layers: MAE and PSNR assess CT intensities, MS-SSIM assesses visual structure, and Dice and HD95 assess anatomy derived from segmentations.</p></div>
+        <div class="prose"><p>Inference produces a synthetic CT in Hounsfield units. Evaluation then asks how closely it matches the reference CT. Metrics summarize overall error, while image panels show where errors occur. Both are useful because either one can hide an important failure.</p><p>Read the metrics in three layers: MAE and PSNR assess CT intensities, MS-SSIM assesses visual structure, and Dice and HD95 assess anatomy derived from segmentations.</p></div>
         <div class="metric-grid">
           <article><span>MAE</span><h3>How wrong are the CT values?</h3><code class="metric-formula">MAE = (1/N) ∑ |p<sub>i</sub> − t<sub>i</sub>|</code><p>Average HU difference at the evaluated voxels. MAE = 100 HU means an average error of 100 HU per voxel. Lower is better.</p></article>
           <article><span>PSNR</span><h3>How small is the error relative to the image range?</h3><code class="metric-formula">PSNR = 20 log<sub>10</sub>(R / √MSE)</code><p>Compares reconstruction error with the stated CT intensity range R. Higher means less error relative to that range.</p></article>
@@ -568,6 +571,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">A verified public-data execution trace</p>
         <h2>Our three-case execution check</h2>
+        <div class="prose"><p>The previous chapters describe the complete pipeline. We tested that pipeline on three public abdomen cases with a deliberately short run. Its purpose was to confirm that every stage connects, rather than to measure synthesis quality.</p></div>
+
         <div class="run-passport">
           <div><p class="label">Dataset</p><strong>3 abdomen cases</strong><span>Dataset501</span></div>
           <div><p class="label">Fold 0</p><strong>2 train / 1 held out</strong><span>1ABA033 held out from updates</span></div>
@@ -591,7 +596,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             <p><strong>Visible seams:</strong> strong jumps coincide with internal tile boundaries, including y = 62, 160, 222, 285 and x = 80, 239. This is a useful view of sliding-window behavior, not a quality result.</p>
           </div>
         </details>
-        <p class="chapter-next">The final chapter summarizes the ideas a learner should be able to explain after following the run.</p>
       </div>
     </section>
 
@@ -625,10 +629,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
     </section>
 
     <section class="resources section-pad" id="resources">
-      <div class="section-intro"><p class="section-kicker">Course materials</p><h2>Sources, code, and provenance</h2></div>
+      <div class="section-intro"><p class="section-kicker">Course materials</p><h2>Acknowledgements, sources, and code</h2></div>
       <div class="resource-grid">
         <article><span>01</span><h3>Reproduce the walkthrough</h3><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md">Start with the verified code guide</a><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/ENVIRONMENT.md">See the tested environment</a></article>
-        <article><span>02</span><h3>Data &amp; external application</h3><a href="https://synthrad2025.grand-challenge.org/data/">SynthRAD2025 data</a><a href="https://huggingface.co/aehrc/synthrad2025_docker">AEHRC SynthRAD2025 release</a></article>
+        <article><span>02</span><h3>Dataset and related release</h3><a href="https://synthrad2025.grand-challenge.org/data/">SynthRAD2025 data</a><a href="https://huggingface.co/aehrc/synthrad2025_docker">AEHRC SynthRAD2025 release</a></article>
         <article><span>03</span><h3>Primary sources</h3><a href="https://github.com/aehrc/nnsyn">aehrc/nnsyn repository</a><a href="https://synthrad2025.grand-challenge.org/">SynthRAD2025</a></article>
       </div>
 
@@ -649,7 +653,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       </div>
 
       <div class="disclosure" id="disclosure">
-        <div><p class="label">AI assistance</p><p>OpenAI Codex and Anthropic Claude were used to help organize the course, revise English text, develop and edit the HTML/CSS website and supporting Python/PowerShell scripts, troubleshoot the local Windows/CUDA workflow, and check consistency across the site, code, figures, and references.</p></div>
+        <div><p class="label">AI assistance</p><p>OpenAI Codex and Anthropic Claude assisted with course organization, English revision, HTML/CSS, and the supporting Python and PowerShell scripts. They were also used during Windows/CUDA troubleshooting and the final consistency review.</p></div>
         <div><p class="label">Human verification and responsibility</p><p>Zaiyou He ran the reported preprocessing, smoke training, and inference steps; inspected the logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Codex and Claude did not generate the medical images or experimental measurements; these came from the public dataset and the reported nnsyn run. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.</p></div>
       </div>
     </section>
