@@ -24,12 +24,11 @@
 
     <div class="hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Repository-grounded medical image synthesis</p>
+        <p class="eyebrow">A practical walkthrough of the aehrc/nnsyn repository</p>
         <h1><em>nnsyn</em><span>A self-configured framework for 3D image translation</span></h1>
         <p class="hero-lede">
-          Learn what the repository does by following one aligned 3D MRI–CT case
-          through data preparation, planning, training, inference, post-processing,
-          and evaluation.
+          Follow one public 3D MRI–CT case through the files, experiment plan,
+          network, losses, training, inference, and evaluation used by nnsyn.
         </p>
         <div class="author-line" aria-label="Course authors and affiliation">
           <p class="author-names"><strong>Zaiyou He</strong><sup>1</sup>, <strong>Jun Ma</strong><sup>2</sup></p>
@@ -62,10 +61,10 @@
     <section class="orientation section-pad" id="course-map">
       <div class="section-intro">
         <p class="section-kicker">Course map</p>
-        <h2>Understand the task.<br>Then follow the data.</h2>
+        <h2>Course structure</h2>
         <p>
-          The course follows the nnsyn pipeline rather than a particular competition recipe
-          or computer. Each chapter answers one question and passes its output to the next.
+          The chapters follow the order in which nnsyn turns paired medical images into a
+          planned experiment and, eventually, an evaluable synthetic CT.
         </p>
       </div>
 
@@ -99,7 +98,7 @@
       <div class="chapter-side"><span class="chapter-no">01</span><p>Clinical task</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Why synthesize CT from MRI?</p>
-        <h2>One patient, two modalities,<br>two kinds of information.</h2>
+        <h2>Why synthesize CT from MRI?</h2>
 
         <div class="prose">
           <p>
@@ -161,7 +160,6 @@
           <p>If the CT is shifted five voxels to the right, what does a voxel-wise loss measure?</p>
           <details><summary>Show answer</summary><p>Both synthesis error and misalignment. The target at a coordinate no longer represents the same anatomy.</p></details>
         </div>
-        <p class="chapter-next">Now that the task is defined, the next question is how nnsyn turns it into a complete experiment.</p>
       </div>
     </section>
 
@@ -169,7 +167,7 @@
       <div class="chapter-side"><span class="chapter-no">02</span><p>Framework</p></div>
       <div class="chapter-body">
         <p class="section-kicker">What nnsyn actually is</p>
-        <h2>nnU-Net machinery,<br>redirected to image regression.</h2>
+        <h2>How nnsyn adapts nnU-Net for image synthesis</h2>
         <div class="prose">
           <p>
             nnsyn is a self-configuring framework for paired 3D medical image synthesis.
@@ -213,7 +211,7 @@
         </div>
 
         <div class="checkpoint"><strong>Chapter takeaway</strong><p>nnsyn is not one fixed U-Net. It is a framework that converts dataset properties into a reproducible synthesis experiment.</p></div>
-        <p class="chapter-next">That experiment begins with paired files and a plan derived from their properties.</p>
+        <p class="chapter-next">The next chapters follow the files, plan, network, and training loop used in that experiment.</p>
       </div>
     </section>
 
@@ -221,7 +219,7 @@
       <div class="chapter-side"><span class="chapter-no">03</span><p>Data & plans</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Data preparation and self-configuration</p>
-        <h2>Files describe the case.<br>The plan describes the experiment.</h2>
+        <h2>From paired files to a training plan</h2>
 
         <div class="prose">
           <p>
@@ -252,8 +250,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
 
         <div class="evidence">
-          <span class="evidence-label">Repository adaptation</span>
-          <div><strong><code>CASE_seg.npy</code> contains continuous CT values.</strong><p>The filename is inherited from nnU-Net, but nnsyn copies the separately preprocessed CT target into this slot. The name says “seg”; the contents are not class labels.</p></div>
+          <span class="evidence-label">A confusing inherited filename</span>
+          <div><strong><code>CASE_seg.npy</code> contains continuous CT values.</strong><p>The name suggests a segmentation map. Inspecting the stored array and the preprocessing code shows that nnsyn reuses this nnU-Net target slot for the normalized CT; the contents are not class labels.</p></div>
         </div>
 
         <figure class="teaching-figure">
@@ -279,6 +277,12 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             <div><dt>Stages</dt><dd>6 encoder levels</dd></div>
           </dl>
         </div>
+
+        <div class="evidence">
+          <span class="evidence-label">Why Dataset501?</span>
+          <div><strong>Dataset501 is a local nnU-Net identifier for this teaching subset.</strong><p>It is not an official SynthRAD2025 dataset number and has no clinical meaning. Three public abdomen cases were enough to exercise every pipeline stage, but not enough to train or evaluate a useful synthesis model.</p></div>
+        </div>
+
 
         <div class="prose">
           <p>
@@ -311,7 +315,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <details><summary>Show answer</summary><p>No. It creates a stable numerical range for learning. HU restoration applies only to the predicted CT using saved CT statistics.</p></details>
         </div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#data-and-preprocessing">Data and preprocessing guide</a></div>
-        <p class="chapter-next">Once the plan fixes spacing, patch size, and network depth, we can follow a patch through the model.</p>
       </div>
     </section>
 
@@ -319,7 +322,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">04</span><p>Architecture</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Model and tensor flow</p>
-        <h2>Context travels down.<br>Spatial detail travels across.</h2>
+        <h2>How one MRI patch becomes a CT patch</h2>
 
         <div class="prose">
           <p>
@@ -360,7 +363,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <figure class="teaching-figure"><img src="figures/fig03_training_patch.png" alt="A 3D MRI volume with a highlighted training patch"><figcaption>Dataset501 patch view · 56 × 160 × 224 voxels · one training sample is smaller than the full scan</figcaption></figure>
         <div class="checkpoint"><strong>Architecture scope</strong><p>The local smoke plan used a six-stage PlainConvUNet. nnsyn can also plan other architectures, including residual-encoder and MedNeXt variants.</p></div>
-        <p class="chapter-next">The architecture produces a CT prediction; the loss determines which prediction counts as better.</p>
       </div>
     </section>
 
@@ -368,7 +370,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">05</span><p>Losses</p></div>
       <div class="chapter-body">
         <p class="section-kicker">What the model is asked to minimize</p>
-        <h2>A loss is not just a formula.<br>It defines what “better” means.</h2>
+        <h2>MSE, masked MSE, and MAP loss</h2>
 
         <div class="prose">
           <p>
@@ -450,7 +452,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             </table>
           </div>
           <p>These are reported validation-leaderboard rows from the KoalAI algorithm description, not results from our smoke run and not a final-test benchmark. They illustrate why anatomical metrics may reveal changes that MAE alone does not.</p>
-          <a href="https://huggingface.co/aehrc/synthrad2025_docker">Open the public SynthRAD2025 release</a>
+          <a href="https://2025.sashimiworkshop.org/program/">See the public SASHIMI programme entry for Team KoalAI</a>
         </div>
 
         <div class="checkpoint">
@@ -458,7 +460,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <p>If w = 0.5, must perception loss and image loss contribute equally sized gradients?</p>
           <details><summary>Show answer</summary><p>No. The coefficients are equal, but the terms can have different scales and gradient magnitudes.</p></details>
         </div>
-        <p class="chapter-next">With the objective defined, training can repeatedly use it to update the synthesis network.</p>
       </div>
     </section>
 
@@ -466,7 +467,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">06</span><p>Training</p></div>
       <div class="chapter-body">
         <p class="section-kicker">From one update to a checkpoint</p>
-        <h2>Training repeats one contract:<br>load, predict, compare, update.</h2>
+        <h2>What happens during one training iteration</h2>
         <div class="prose"><p>Each iteration samples aligned patches, predicts normalized CT, evaluates the selected loss, sends gradients backward, and updates the synthesis network. Validation and checkpoints turn those repeated updates into a traceable experiment.</p></div>
         <ol class="process-grid process-six">
           <li><span>1</span><h3>Load</h3><p>MRI, target CT, and optional mask patches.</p></li>
@@ -482,7 +483,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
         <div class="checkpoint"><strong>Do not confuse these runs.</strong><p>The baseline protocol is intended to learn. The smoke protocol is intentionally too short to support a quality claim.</p></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#smoke-training">Verified smoke-training guide</a></div>
-        <p class="chapter-next">A checkpoint is only useful when inference reconstructs the same experiment and restores the CT scale.</p>
+        <p class="chapter-next">The saved checkpoint is then used to predict a complete CT volume and restore its physical intensity scale.</p>
       </div>
     </section>
 
@@ -490,7 +491,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">07</span><p>Inference</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Prediction and post-processing</p>
-        <h2>A patch model must produce<br>one coherent CT volume.</h2>
+        <h2>From overlapping patches to one CT volume</h2>
         <div class="prose">
           <p>
             The full scan is larger than the training patch. At inference, overlapping windows
@@ -531,7 +532,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <div class="identity-lock"><strong>Model identity must match</strong><span>dataset ID</span><span>plan</span><span>configuration</span><span>trainer</span><span>fold</span><span>checkpoint</span><span>channels</span></div>
         <div class="checkpoint"><strong>Check your understanding</strong><p>The raw prediction contains values close to 0. Does that mean the synthetic CT is blank?</p><details><summary>Show answer</summary><p>No. The network predicts standardized CT values, where 0 is near the training-set mean. Apply the stored CT mean and standard deviation before interpreting the image in Hounsfield units.</p></details></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#inference-hu-restoration-and-evaluation">Inference and HU-restoration guide</a></div>
-        <p class="chapter-next">After HU restoration, metrics and images can evaluate different aspects of the same prediction.</p>
       </div>
     </section>
 
@@ -539,7 +539,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">08</span><p>Evaluation</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Numbers and images answer different questions</p>
-        <h2>No single average explains<br>an entire 3D volume.</h2>
+        <h2>How synthetic CT is evaluated</h2>
         <div class="prose"><p>Image metrics summarize intensity and structure, but they do not show where an error occurs. Visual panels reveal spatial failures, yet they can be cherry-picked. A responsible evaluation needs both.</p><p>Read the metrics in three layers: MAE and PSNR assess CT intensities, MS-SSIM assesses visual structure, and Dice and HD95 assess anatomy derived from segmentations.</p></div>
         <div class="metric-grid">
           <article><span>MAE</span><h3>How wrong are the CT values?</h3><code class="metric-formula">MAE = (1/N) ∑ |p<sub>i</sub> − t<sub>i</sub>|</code><p>Average HU difference at the evaluated voxels. MAE = 100 HU means an average error of 100 HU per voxel. Lower is better.</p></article>
@@ -560,7 +560,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <div class="evaluation-rule"><strong>Minimum visual panel</strong><span>MRI input</span><span>synthetic CT</span><span>reference CT</span><span>absolute error</span><p>Inspect multiple anatomical slices and include failures, not only the best-looking example.</p></div>
         <div class="checkpoint"><strong>Evaluation rule</strong><p>Use the mask definition, HU restoration, metric implementation, and case split consistently. Otherwise two reported numbers may not describe the same experiment.</p></div>
         <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#rebuild-the-evidence-figures">Evaluation and figure-generation code</a></div>
-        <p class="chapter-next">The small run in the next chapter shows which parts of this pipeline were actually executed.</p>
       </div>
     </section>
 
@@ -568,7 +567,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">09</span><p>Hands-on</p></div>
       <div class="chapter-body">
         <p class="section-kicker">A verified public-data execution trace</p>
-        <h2>What we ran,<br>what it proves, and what it does not.</h2>
+        <h2>Our three-case execution check</h2>
         <div class="run-passport">
           <div><p class="label">Dataset</p><strong>3 abdomen cases</strong><span>Dataset501</span></div>
           <div><p class="label">Fold 0</p><strong>2 train / 1 held out</strong><span>1ABA033 held out from updates</span></div>
@@ -577,7 +576,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
         <figure class="result-figure">
           <img src="figures/fig06_smoke_synthetic_ct.png" alt="MRI input, smoke synthetic CT, reference CT, and absolute HU error">
-          <figcaption><strong>Execution evidence only.</strong> Two optimizer updates produced this output; masked MAE = 249.9 HU. The visible grid follows sliding-window boundaries because a nearly untrained patch model makes inconsistent neighboring predictions.</figcaption>
+          <figcaption><strong>Execution evidence only.</strong> A poor prediction after two optimizer updates was expected; the regular grid was not. Comparing the discontinuities with the window positions showed that they follow sliding-window boundaries. Masked MAE = 249.9 HU.</figcaption>
         </figure>
         <div class="comparison claims">
           <article><p class="label">This run supports</p><ul><li>data loading and patch sampling work;</li><li>forward, MSE, backward, validation, and checkpoints connect;</li><li>inference, HU restoration, masking, and export complete.</li></ul></article>
@@ -592,7 +591,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             <p><strong>Visible seams:</strong> strong jumps coincide with internal tile boundaries, including y = 62, 160, 222, 285 and x = 80, 239. This is a useful view of sliding-window behavior, not a quality result.</p>
           </div>
         </details>
-        <p class="chapter-next">The final section condenses the pipeline into the ideas a learner should be able to explain.</p>
+        <p class="chapter-next">The final chapter summarizes the ideas a learner should be able to explain after following the run.</p>
       </div>
     </section>
 
@@ -600,7 +599,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-side"><span class="chapter-no">10</span><p>Takeaways</p></div>
       <div class="chapter-body">
         <p class="section-kicker">Close the loop</p>
-        <h2>Five ideas connect<br>the whole repository.</h2>
+        <h2>Summary and knowledge check</h2>
         <ol class="takeaways">
           <li><span>01</span><p>The core task is continuous <strong>MRI-to-CT regression</strong>, not segmentation.</p></li>
           <li><span>02</span><p>Self-configuration connects <strong>dataset properties to a reproducible plan</strong>.</p></li>
@@ -626,15 +625,32 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
     </section>
 
     <section class="resources section-pad" id="resources">
-      <div class="section-intro"><p class="section-kicker">Continue learning</p><h2>Source, practice, and provenance.</h2></div>
+      <div class="section-intro"><p class="section-kicker">Course materials</p><h2>Sources, code, and provenance</h2></div>
       <div class="resource-grid">
         <article><span>01</span><h3>Reproduce the walkthrough</h3><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md">Start with the verified code guide</a><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/ENVIRONMENT.md">See the tested environment</a></article>
         <article><span>02</span><h3>Data &amp; external application</h3><a href="https://synthrad2025.grand-challenge.org/data/">SynthRAD2025 data</a><a href="https://huggingface.co/aehrc/synthrad2025_docker">AEHRC SynthRAD2025 release</a></article>
         <article><span>03</span><h3>Primary sources</h3><a href="https://github.com/aehrc/nnsyn">aehrc/nnsyn repository</a><a href="https://synthrad2025.grand-challenge.org/">SynthRAD2025</a></article>
       </div>
-      <div class="disclosure">
-        <div><p class="label">AI assistance disclosure</p><p>OpenAI Codex and Anthropic Claude assisted with drafting, code review, debugging, and website development. The authors ran and verified the experiments and reviewed the final content.</p></div>
-        <div><p class="label">Attribution</p><p>nnsyn is distributed under Apache License 2.0 and builds on nnU-Net and related open-source work. Except where otherwise noted, this tutorial is released under CC BY 4.0. Figures derived from SynthRAD2025 imaging data are adapted from data licensed CC BY-NC 4.0 and remain subject to that license.</p></div>
+
+      <div class="evidence evidence-table">
+        <span class="evidence-label">Data, software, and figure provenance</span>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Material</th><th>How it is used here</th><th>Source and terms</th></tr></thead>
+            <tbody>
+              <tr><td>aehrc/nnsyn</td><td>Repository studied and executed; course code is tied to commit <code>c3ba6fd8</code>.</td><td>Australian e-Health Research Centre; Apache License 2.0.</td></tr>
+              <tr><td>nnU-Net</td><td>Planning, preprocessing, training, and inference infrastructure inherited by nnsyn.</td><td>Isensee et al.; see the upstream paper and repository.</td></tr>
+              <tr><td>SynthRAD2025 Task 1</td><td>Three public abdomen MRI–CT cases and all medical-image figures. Raw scans are not redistributed.</td><td>Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0.</td></tr>
+              <tr><td>KoalAI description</td><td>External MAP-loss validation rows in Chapter 05; these are not results from our run.</td><td>Xin et al., SynthRAD2025 algorithm description.</td></tr>
+              <tr><td>Course scripts and figures</td><td>Teaching-scale execution, evaluation, and visualization created for this course.</td><td>AI assistance and human verification are described below.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="disclosure" id="disclosure">
+        <div><p class="label">AI assistance</p><p>OpenAI Codex and Anthropic Claude were used to help organize the course, revise English text, develop and edit the HTML/CSS website and supporting Python/PowerShell scripts, troubleshoot the local Windows/CUDA workflow, and check consistency across the site, code, figures, and references.</p></div>
+        <div><p class="label">Human verification and responsibility</p><p>Zaiyou He ran the reported preprocessing, smoke training, and inference steps; inspected the logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Codex and Claude did not generate the medical images or experimental measurements; these came from the public dataset and the reported nnsyn run. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.</p></div>
       </div>
     </section>
 
