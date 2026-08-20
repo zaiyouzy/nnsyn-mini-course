@@ -47,7 +47,7 @@ The patch disables Slurm-only signals during local runs and removes two unused i
 
 ## Data and preprocessing
 
-Obtain SynthRAD2025 Task 1 training data through the [official data page](https://synthrad2025.grand-challenge.org/data/) and follow its licence. Images are not redistributed here.
+Obtain SynthRAD2025 Task 1 training data through the [official data page](https://synthrad2025.grand-challenge.org/data/) and follow its license. Images are not redistributed here.
 
 The walkthrough used abdomen cases `1ABA033`, `1ABB062`, and `1ABB118`:
 

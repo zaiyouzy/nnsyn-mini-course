@@ -11,7 +11,7 @@ once this folder is pushed. Read the list before publishing.
   code/make_course_figures.py                           15.4 KB  e3c766eebf85
   code/patches/nnsyn_course_windows.patch                3.5 KB  e92bb1f92203
   code/patches/nnUNetTrainer_nnsyn_smoke.py              0.8 KB  4d3b712ab9b3
-  code/README.md                                         5.1 KB  0467b7b8d22c
+  code/README.md                                         5.1 KB  3c62fbc3b76f
   code/run_nnsyn_smoke_training.py                       4.0 KB  5d6c8cbf0987
   code/run_smoke_inference.py                            8.2 KB  f27b3aea53c1
   code/setup_course_env.ps1                              1.0 KB  a2d17bef2b06
@@ -21,12 +21,12 @@ once this folder is pushed. Read the list before publishing.
   figures/fig04_seg_npy_is_continuous.png               96.0 KB  bd2b424832df
   figures/fig05_alignment_checkerboard.png             522.5 KB  761f8674a907
   figures/fig06_smoke_synthetic_ct.png                1075.4 KB  7697be98743e
-  index.html                                            48.8 KB  cdea32519bda
-  README.md                                              7.1 KB  debe5d784690
+  index.html                                            48.8 KB  bd49f27a3cfc
+  README.md                                              7.7 KB  86ba9ed79086
   styles.css                                            26.0 KB  ba2730099a1e
   teaching-components.css                                3.3 KB  aea77d8f1a00
 
-  TOTAL                                               3148.0 KB
+  TOTAL                                               3148.7 KB
 
 NOT included in this release, by design:
   notebooks/      contain machine-specific absolute paths and a stale dataset id

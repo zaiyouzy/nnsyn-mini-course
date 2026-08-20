@@ -25,11 +25,11 @@ The course follows one public SynthRAD2025 abdomen MRI–CT case through the sam
 |---|---|
 | 01 · Clinical task | Why synthesize CT from MRI? |
 | 02 · Framework | How does nnsyn adapt nnU-Net? |
-| 03 · Data and plans | How do paired files become a training plan? |
+| 03 · Data and plans | How does nnsyn build the training plan? |
 | 04 · Architecture | How does one MRI patch become a CT patch? |
 | 05 · Losses | What do MSE, masked MSE, and MAP loss optimize? |
-| 06 · Training | What happens during one training iteration? |
-| 07 · Inference | How do overlapping patches become one CT volume? |
+| 06 · Training | What happens in one training iteration? |
+| 07 · Inference | How is the full CT volume reconstructed? |
 | 08 · Evaluation | How should synthetic CT be evaluated? |
 | 09 · Hands-on | What did the three-case execution check verify? |
 | 10 · Summary | Which ideas connect the complete pipeline? |
@@ -75,11 +75,18 @@ The walkthrough was tested against nnsyn commit `c3ba6fd8b32f62779f299f78b7d78a9
 
 ## AI assistance and human verification
 
-OpenAI Codex and Anthropic Claude were used to help organize the course, revise English text, develop and edit the HTML/CSS website and supporting Python/PowerShell scripts, troubleshoot the local Windows/CUDA workflow, and check consistency across the site, code, figures, and references.
+| Course component | AI assistance | Human verification |
+|---|---|---|
+| Course structure and English text | Codex and Claude assisted with organization, drafting, and language revision | Zaiyou He reviewed and edited the final material alongside the cited sources and run records |
+| Website and supporting scripts | Codex and Claude assisted with HTML/CSS, Python/PowerShell, and troubleshooting | The site was built locally; the reported scripts were executed and their outputs inspected |
+| Figures | AI assisted with plotting code and layout | Figures were generated from the public teaching data and checked against the source volumes |
+| Medical images and experimental measurements | Codex and Claude did not generate these materials | They come from SynthRAD2025 and the reported nnsyn run |
 
-Zaiyou He ran the reported preprocessing, smoke training, and inference steps; inspected the resulting logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Codex and Claude did not generate the medical images or experimental measurements; these came from the public dataset and the reported nnsyn run. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.
+Zaiyou He ran the reported preprocessing, smoke training, and inference steps; inspected the resulting logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.
 
-## Data, software, and figure provenance
+## Acknowledgements and provenance
+
+We acknowledge the Australian e-Health Research Centre for releasing nnsyn, the nnU-Net authors for the underlying framework, and the SynthRAD2025 organizers for making the public dataset available.
 
 | Material | Use in this course | Source and terms |
 |---|---|---|
