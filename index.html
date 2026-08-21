@@ -539,9 +539,9 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
     <section class="chapter chapter-tint" id="hands-on" data-chapter="09">
       <div class="chapter-side"><span class="chapter-no">09</span><p>Hands-on</p></div>
       <div class="chapter-body">
-        <p class="section-kicker">A trained baseline on held-out data</p>
+        <p class="section-kicker">Our baseline reproduction</p>
         <h2>Training nnsyn on SynthRAD2025 abdomen data</h2>
-        <div class="prose"><p>We trained the planned 3D PlainConvUNet for 300 epochs on 175 public SynthRAD2025 abdomen cases. Fold 0 used 140 cases for training and 35 for validation. Earlier chapters follow case 1ABA033; the result below uses 1ABA101 because its error is closest to the validation median.</p></div>
+        <div class="prose"><p><strong>This is our 300-epoch masked-MSE baseline, not a challenge-winning result.</strong> We trained the planned 3D PlainConvUNet on 175 public SynthRAD2025 abdomen cases. Fold 0 used 140 cases for training and 35 for validation. The result below uses 1ABA101 because its error is closest to the validation median.</p></div>
 
         <div class="run-passport">
           <div><p class="label">Dataset</p><strong>175 paired cases</strong><span>SynthRAD2025 Task 1 abdomen</span></div>
@@ -553,7 +553,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <a href="figures/fig06_trained_synthetic_ct.png" aria-label="Open the full-size validation result figure">
             <img src="figures/fig06_trained_synthetic_ct.png" alt="MRI input, predicted synthetic CT, reference CT, and absolute HU error for representative held-out validation case 1ABA101">
           </a>
-          <figcaption><strong>Representative validation case 1ABA101.</strong> Its masked MAE is 102.0 HU, close to the 35-case median. Error is calculated inside the body mask.</figcaption>
+          <figcaption><strong>Representative result from our baseline reproduction.</strong> Case 1ABA101 has a masked MAE of 102.0 HU, close to the 35-case median.</figcaption>
         </figure>
         <h3 class="plain-subhead">How to read this result</h3>
         <div class="prose"><p>The model recovers the overall body shape and much of the soft-tissue intensity pattern, but its synthetic CT is visibly smoother than the reference. Bone edges and fine local details remain inaccurate. Bright regions in the error map show where the HU differences are largest.</p></div>

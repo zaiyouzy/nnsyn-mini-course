@@ -29,7 +29,7 @@ once this folder is pushed. Read the list before publishing.
   figures/fig06_trained_synthetic_ct.png               900.1 KB  99f26f443670
   figures/fig07_architecture_plainconvunet.pdf          25.6 KB  693af63c739c
   figures/fig07_architecture_plainconvunet.png         248.0 KB  06ad59ff00a5
-  index.html                                            47.1 KB  bf4a588bf8b2
+  index.html                                            47.1 KB  ca9c4a40dd46
   README.md                                              8.1 KB  8ee5f84ea712
   results.html                                           5.0 KB  c8b29afa67de
   styles.css                                            30.6 KB  e1b1b4bad13e
