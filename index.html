@@ -340,7 +340,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <figure class="teaching-figure architecture-figure">
           <img src="figures/fig07_architecture_plainconvunet.png"
                alt="Plan-derived six-stage 3D PlainConvUNet with encoder, decoder, bottleneck, and skip connections">
-          <figcaption><strong>Plan-derived architecture used in our full-data run.</strong> The static high-resolution figure can also be used in slides or manuscripts. Feature channels are shown inside each stage; spatial sizes follow the generated SynthRAD2025 abdomen plan.</figcaption>
+          <figcaption><strong>Plan-derived architecture used in our full-data run.</strong> Feature channels are shown inside each stage; spatial sizes follow the generated SynthRAD2025 abdomen plan. <a href="figures/fig07_architecture_plainconvunet.pdf">Download the vector PDF for slides or manuscripts.</a></figcaption>
         </figure>
 
         <dl class="concept-list">
@@ -539,9 +539,9 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
     <section class="chapter chapter-tint" id="hands-on" data-chapter="09">
       <div class="chapter-side"><span class="chapter-no">09</span><p>Hands-on</p></div>
       <div class="chapter-body">
-        <p class="section-kicker">A trained public-data validation result</p>
+        <p class="section-kicker">A trained baseline on held-out data</p>
         <h2>Training nnsyn on SynthRAD2025 abdomen data</h2>
-        <div class="prose"><p>We trained the planned 3D PlainConvUNet for 300 epochs on the 175 public SynthRAD2025 Task 1 abdomen cases. Fold 0 used 140 cases for weight updates and held out 35 cases for validation. We evaluated every held-out case after restoring the predictions to Hounsfield units and applying the body mask. Earlier chapters follow case 1ABA033 to explain the data flow; the result panel uses 1ABA101 because its MAE is closest to the validation median.</p></div>
+        <div class="prose"><p>We trained the planned 3D PlainConvUNet for 300 epochs on 175 public SynthRAD2025 abdomen cases. Fold 0 used 140 cases for training and 35 for validation. Earlier chapters follow case 1ABA033; the result below uses 1ABA101 because its error is closest to the validation median.</p></div>
 
         <div class="run-passport">
           <div><p class="label">Dataset</p><strong>175 paired cases</strong><span>SynthRAD2025 Task 1 abdomen</span></div>
@@ -550,14 +550,18 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <div><p class="label">Validation MAE</p><strong>105.0 HU mean</strong><span>102.0 HU median</span></div>
         </div>
         <figure class="result-figure">
-          <img src="figures/fig06_trained_synthetic_ct.png" alt="MRI input, predicted synthetic CT, reference CT, and absolute HU error for representative held-out validation case 1ABA101">
-          <figcaption><strong>Representative held-out validation result from our trained model.</strong> Case 1ABA101 was excluded from fold 0 weight updates and had a masked MAE of 102.0 HU, close to the cohort median. Values outside the body mask are displayed as air at −1000 HU and are excluded from the error calculation. Across all 35 validation cases, mean masked MAE was 105.0 HU, median was 102.0 HU, and the range was 67.4–189.1 HU. These are one-fold validation results from our reproduction, not challenge-test results.</figcaption>
+          <a href="figures/fig06_trained_synthetic_ct.png" aria-label="Open the full-size validation result figure">
+            <img src="figures/fig06_trained_synthetic_ct.png" alt="MRI input, predicted synthetic CT, reference CT, and absolute HU error for representative held-out validation case 1ABA101">
+          </a>
+          <figcaption><strong>Representative validation case 1ABA101.</strong> Its masked MAE is 102.0 HU, close to the 35-case median. Error is calculated inside the body mask.</figcaption>
         </figure>
+        <h3 class="plain-subhead">How to read this result</h3>
+        <div class="prose"><p>The model recovers the overall body shape and much of the soft-tissue intensity pattern, but its synthetic CT is visibly smoother than the reference. Bone edges and fine local details remain inaccurate. Bright regions in the error map show where the HU differences are largest.</p></div>
         <div class="comparison claims">
           <article><p class="label">What this result shows</p><ul><li>the full-data planning and preprocessing pipeline runs;</li><li>the network learns an MRI-to-CT mapping from 140 cases;</li><li>inference, HU restoration, masking, and evaluation complete across all 35 held-out cases.</li></ul></article>
           <article><p class="label">What it does not establish</p><ul><li>challenge-test or external-site performance;</li><li>five-fold or ensemble performance;</li><li>a reproduction of MAP loss or the complete KoalAI recipe.</li></ul></article>
         </div>
-        <div class="notebook-link"><span>Validation records</span><a href="code/results/validation_mae.csv">Per-case masked MAE</a><a href="code/results/validation_summary.json">Aggregate summary</a></div>
+        <div class="notebook-link"><span>Validation results</span><a href="results.html">View the 35-case summary and per-case table</a></div>
         <details class="field-notes">
           <summary><span>Implementation notes</span><small>supplementary evidence, not the course theme</small></summary>
           <div>

@@ -5,11 +5,11 @@ Every file listed below will become publicly readable on the internet
 once this folder is pushed. Read the list before publishing.
 
   .nojekyll                                              0.0 KB  e3b0c44298fc
-  app.js                                                 0.7 KB  3fe909a1246e
+  app.js                                                 0.9 KB  b255334fcb87
   code/ENVIRONMENT.md                                    0.8 KB  09d3f85c3462
   code/evaluate_trained_validation.py                    7.6 KB  24d8f719fd47
   code/LICENSE-nnsyn.txt                                11.3 KB  b7fb45826701
-  code/make_architecture_figure.py                       4.3 KB  741fa759c016
+  code/make_architecture_figure.py                       4.8 KB  d22821139dc1
   code/make_course_figures.py                           16.8 KB  e6cbccb6cc9c
   code/patches/nnsyn_course_windows.patch                3.5 KB  e92bb1f92203
   code/patches/nnUNetTrainer_nnsyn_smoke.py              0.8 KB  4d3b712ab9b3
@@ -27,13 +27,15 @@ once this folder is pushed. Read the list before publishing.
   figures/fig03_training_patch.png                     393.7 KB  2cbcc72e4486
   figures/fig05_alignment_checkerboard.png             522.5 KB  761f8674a907
   figures/fig06_trained_synthetic_ct.png               900.1 KB  99f26f443670
-  figures/fig07_architecture_plainconvunet.png         174.8 KB  7e1a80e3bc5c
-  index.html                                            47.2 KB  2ca0231566ed
+  figures/fig07_architecture_plainconvunet.pdf          25.6 KB  693af63c739c
+  figures/fig07_architecture_plainconvunet.png         248.0 KB  06ad59ff00a5
+  index.html                                            47.1 KB  bf4a588bf8b2
   README.md                                              8.1 KB  8ee5f84ea712
-  styles.css                                            28.2 KB  a7778f79a4fd
+  results.html                                           5.0 KB  c8b29afa67de
+  styles.css                                            30.6 KB  e1b1b4bad13e
   teaching-components.css                                3.3 KB  aea77d8f1a00
 
-  TOTAL                                               3209.9 KB
+  TOTAL                                               3316.9 KB
 
 NOT included in this release, by design:
   notebooks/      contain machine-specific absolute paths and a stale dataset id

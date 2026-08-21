@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Fold-0 validation results from the nnsyn 300-epoch SynthRAD2025 abdomen reproduction.">
+  <title>nnsyn validation results</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="results-page">
+  <header class="results-header">
+    <div class="results-shell">
+      <a class="results-back" href="index.html#hands-on">← Back to the course</a>
+      <p class="section-kicker">Fold 0 · 300-epoch baseline</p>
+      <h1>Validation results</h1>
+      <p>Masked MAE after restoring synthetic CT predictions to Hounsfield units. Lower is better.</p>
+    </div>
+  </header>
+  <main class="results-shell">
+    <section class="results-summary" aria-label="Validation summary">
+      <article><span>Cases</span><strong>35</strong><small>held out from weight updates</small></article>
+      <article><span>Mean MAE</span><strong>105.0 HU</strong><small>across the full fold</small></article>
+      <article><span>Median MAE</span><strong>102.0 HU</strong><small>middle validation result</small></article>
+      <article><span>Range</span><strong>67.4–189.1 HU</strong><small>best to worst case</small></article>
+    </section>
+
+    <section class="results-explanation">
+      <h2>What this page shows</h2>
+      <p>The model was trained on 140 SynthRAD2025 Task 1 abdomen cases and evaluated on the other 35 cases in fold 0. Case <code>1ABA101</code> is used in the course figure because its 102.0 HU error is closest to the cohort median, not because it is the best result.</p>
+      <p>These are internal one-fold validation results from our masked-MSE PlainConvUNet baseline. They are not challenge-test, five-fold ensemble, external-site, or clinical-performance results.</p>
+    </section>
+
+    <section class="results-table-section">
+      <div class="results-table-heading">
+        <div><p class="section-kicker">All held-out cases</p><h2>Per-case masked MAE</h2></div>
+        <p>Body-mask voxels only</p>
+      </div>
+      <div class="table-wrap">
+        <table class="results-table">
+          <thead><tr><th>Case</th><th>Masked MAE</th></tr></thead>
+          <tbody>
+            <tr><td><code>1ABA011</code></td><td>95.8 HU</td></tr>
+            <tr><td><code>1ABA031</code></td><td>101.1 HU</td></tr>
+            <tr><td><code>1ABA047</code></td><td>155.6 HU</td></tr>
+            <tr><td><code>1ABA049</code></td><td>67.7 HU</td></tr>
+            <tr><td><code>1ABA061</code></td><td>102.6 HU</td></tr>
+            <tr><td><code>1ABA073</code></td><td>117.5 HU</td></tr>
+            <tr><td><code>1ABA080</code></td><td>108.7 HU</td></tr>
+            <tr><td><code>1ABA086</code></td><td>82.4 HU</td></tr>
+            <tr><td><code>1ABA092</code></td><td>74.4 HU</td></tr>
+            <tr class="representative-row"><td><code>1ABA101</code><span class="row-note">Representative case</span></td><td>102.0 HU</td></tr>
+            <tr><td><code>1ABA105</code></td><td>76.3 HU</td></tr>
+            <tr><td><code>1ABA108</code></td><td>67.4 HU</td></tr>
+            <tr><td><code>1ABA110</code></td><td>101.7 HU</td></tr>
+            <tr><td><code>1ABA115</code></td><td>111.0 HU</td></tr>
+            <tr><td><code>1ABB004</code></td><td>87.0 HU</td></tr>
+            <tr><td><code>1ABB006</code></td><td>108.8 HU</td></tr>
+            <tr><td><code>1ABB041</code></td><td>133.0 HU</td></tr>
+            <tr><td><code>1ABB054</code></td><td>107.0 HU</td></tr>
+            <tr><td><code>1ABB056</code></td><td>107.2 HU</td></tr>
+            <tr><td><code>1ABB061</code></td><td>114.4 HU</td></tr>
+            <tr><td><code>1ABB069</code></td><td>105.2 HU</td></tr>
+            <tr><td><code>1ABB070</code></td><td>153.4 HU</td></tr>
+            <tr><td><code>1ABB086</code></td><td>130.5 HU</td></tr>
+            <tr><td><code>1ABB102</code></td><td>91.7 HU</td></tr>
+            <tr><td><code>1ABB116</code></td><td>84.8 HU</td></tr>
+            <tr><td><code>1ABB117</code></td><td>89.7 HU</td></tr>
+            <tr><td><code>1ABB118</code></td><td>91.2 HU</td></tr>
+            <tr><td><code>1ABB130</code></td><td>141.5 HU</td></tr>
+            <tr><td><code>1ABB147</code></td><td>86.4 HU</td></tr>
+            <tr><td><code>1ABB155</code></td><td>84.8 HU</td></tr>
+            <tr><td><code>1ABB159</code></td><td>121.9 HU</td></tr>
+            <tr><td><code>1ABB161</code></td><td>85.4 HU</td></tr>
+            <tr><td><code>1ABB163</code></td><td>189.1 HU</td></tr>
+            <tr><td><code>1ABB164</code></td><td>86.8 HU</td></tr>
+            <tr><td><code>1ABC004</code></td><td>110.3 HU</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="results-credit">Derived from the public SynthRAD2025 Task 1 training data. The displayed figures and derived measurements remain subject to the dataset's CC BY-NC 4.0 terms. No raw medical volumes are redistributed.</p>
+  </main>
+</body>
+</html>

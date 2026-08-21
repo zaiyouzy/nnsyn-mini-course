@@ -18,3 +18,10 @@ document.querySelectorAll(".quiz-list details").forEach((item) => {
     });
   });
 });
+
+document.querySelectorAll("a[href]").forEach((link) => {
+  const href = link.getAttribute("href");
+  if (!href || href.startsWith("#") || href.startsWith("mailto:")) return;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+});
