@@ -9,7 +9,7 @@ A practical, repository-grounded introduction to **nnsyn**, a self-configuring f
 
 ## What this course teaches
 
-The course follows one public SynthRAD2025 abdomen MRI–CT case through the same stages used by the repository. By the end, a learner should be able to explain:
+The course follows public SynthRAD2025 abdomen MRI–CT data through the same stages used by the repository. By the end, a learner should be able to explain:
 
 1. why MRI-to-CT synthesis is a continuous regression problem rather than segmentation;
 2. how nnsyn adapts nnU-Net planning, preprocessing, training, and inference;
@@ -31,7 +31,7 @@ The course follows one public SynthRAD2025 abdomen MRI–CT case through the sam
 | 06 · Training | What happens in one training iteration? |
 | 07 · Inference | How is the full CT volume reconstructed? |
 | 08 · Evaluation | How should synthetic CT be evaluated? |
-| 09 · Hands-on | What did the three-case execution check verify? |
+| 09 · Hands-on | What did the full-data training and validation run show? |
 | 10 · Summary | Which ideas connect the complete pipeline? |
 
 ## Repository contents
@@ -44,32 +44,38 @@ figures/                          figures generated from the public teaching sub
 code/README.md                    complete reproduction instructions
 code/ENVIRONMENT.md               tested software and hardware versions
 code/run_nnsyn_smoke_training.py  bounded training execution check
-code/run_smoke_inference.py       inference, HU restoration, MAE, and Figure 06
+code/evaluate_trained_validation.py  35-case HU restoration, masked MAE, and Figure 06
 code/make_course_figures.py       rebuilds Figures 01–05
 code/patches/                     pinned compatibility patch and smoke trainer
 ```
 
 Raw medical images, trained weights, virtual environments, and machine-specific paths are not included.
 
-## Verified execution trace
+## Verified training and validation run
 
-The public code supports a deliberately small execution check, not a performance benchmark.
+The main result comes from our own full-data training run, not from the earlier smoke check.
 
 | Item | Verified value |
 |---|---|
-| Data | 3 public SynthRAD2025 abdomen cases |
-| Local dataset identifier | Dataset501 |
-| Fold 0 | 2 training cases, 1 held-out case |
-| Training | 1 epoch, 2 optimizer updates, 1 validation iteration |
-| Inference | 48 overlapping windows on case 1ABA033 |
-| Observed masked MAE | 249.9 HU |
-| Tested device | NVIDIA RTX 4070 Laptop GPU, 8 GB |
+| Data | 175 paired SynthRAD2025 Task 1 abdomen cases |
+| Fold 0 | 140 training cases, 35 held-out validation cases |
+| Network and loss | 3D PlainConvUNet with masked MSE |
+| Training | 300 epochs; best validation checkpoint |
+| Validation mean masked MAE | 105.0 HU |
+| Validation median masked MAE | 102.0 HU |
+| Validation range | 67.4–189.1 HU |
+| Representative case | 1ABA101, masked MAE 102.0 HU |
+| Training device | NVIDIA H100 80 GB GPU |
 
-`Dataset501` is a local nnU-Net identifier created for the teaching subset; it is not an official SynthRAD2025 dataset number. The run verifies that preprocessing, loading, forward and backward passes, checkpointing, inference, HU restoration, masking, evaluation, and export connect end to end. It does not establish image quality, generalization, clinical suitability, or challenge performance.
+The representative figure uses the case nearest the cohort median, rather than the best-looking case. Predictions are restored to Hounsfield units before evaluation. Values outside the body mask are displayed as −1000 HU and excluded from masked MAE. These numbers describe one held-out validation fold; they are not challenge-test, five-fold, ensemble, external-site, or clinical-performance results.
+
+The repository still includes the three-case smoke utilities as a quick installation and pipeline check. Their two-update output is not used as the course performance figure.
+
+Per-case values and the aggregate summary are available in [`code/results/`](code/results/).
 
 ## Reproduce the walkthrough
 
-Start with [code/README.md](code/README.md). It records the pinned nnsyn commit, data layout, installation steps, compatibility patch, preprocessing command, bounded training command, inference command, observed trace values, and claim boundary.
+Start with [code/README.md](code/README.md). It records the pinned nnsyn commit, data layout, compatibility notes, the optional local smoke check, the full-data validation evidence, and the claim boundary.
 
 The walkthrough was tested against nnsyn commit `c3ba6fd8b32f62779f299f78b7d78a96b7fd7695`. Use the tested commit because the included patch was created for that source version.
 
@@ -78,11 +84,11 @@ The walkthrough was tested against nnsyn commit `c3ba6fd8b32f62779f299f78b7d78a9
 | Course component | AI assistance | Human verification |
 |---|---|---|
 | Course structure and English text | Codex and Claude assisted with organization, drafting, and language revision | Zaiyou He reviewed and edited the final material alongside the cited sources and run records |
-| Website and supporting scripts | Codex and Claude assisted with HTML/CSS, Python/PowerShell, and troubleshooting | The site was built locally; the reported scripts were executed and their outputs inspected |
+| Website and supporting scripts | Codex and Claude assisted with HTML/CSS, Python/PowerShell, and troubleshooting | The site was built locally; preprocessing, training, inference, and evaluation outputs were inspected |
 | Figures | AI assisted with plotting code and layout | Figures were generated from the public teaching data and checked against the source volumes |
 | Medical images and experimental measurements | Codex and Claude did not generate these materials | They come from SynthRAD2025 and the reported nnsyn run |
 
-Zaiyou He ran the reported preprocessing, smoke training, and inference steps; inspected the resulting logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.
+Zaiyou He ran the reported preprocessing, 300-epoch training, inference, and 35-case validation; inspected the resulting logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.
 
 ## Acknowledgements and provenance
 
@@ -92,9 +98,9 @@ We acknowledge the Australian e-Health Research Centre for releasing nnsyn, the 
 |---|---|---|
 | [aehrc/nnsyn](https://github.com/aehrc/nnsyn) | Repository studied and executed; course code is tied to commit `c3ba6fd8` | Australian e-Health Research Centre; Apache License 2.0 |
 | [nnU-Net](https://github.com/MIC-DKFZ/nnUNet) | Planning, preprocessing, training, and inference infrastructure inherited by nnsyn | Isensee et al.; Apache License 2.0 |
-| [SynthRAD2025 Task 1](https://doi.org/10.5281/zenodo.14918089) | Three public abdomen MRI–CT cases and all medical-image figures | Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0 |
+| [SynthRAD2025 Task 1](https://doi.org/10.5281/zenodo.14918089) | Public abdomen MRI–CT data and all medical-image figures | Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0 |
 | KoalAI algorithm description | External MAP-loss validation rows in Chapter 05 | Xin et al.; these values are not results from the course run |
-| Course scripts and figures | Teaching-scale execution, evaluation, and visualization | AI assistance and human verification are disclosed above |
+| Course scripts and figures | Reproduction, evaluation, and visualization | AI assistance and human verification are disclosed above |
 
 No raw SynthRAD2025 scans are redistributed in this repository. The included `code/LICENSE-nnsyn.txt` is a copy of the upstream nnsyn license for reference. Course text and original tutorial layout are released under CC BY 4.0 unless otherwise stated; third-party material retains its original terms.
 

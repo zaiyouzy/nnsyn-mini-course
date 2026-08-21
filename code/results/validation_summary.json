@@ -1,0 +1,13 @@
+{
+  "dataset": "Dataset601_SynthRAD2025_Task1_AB_Train",
+  "trainer": "nnUNetTrainer_nnsyn_loss_masked_300epochs",
+  "fold": 0,
+  "validation_cases": 35,
+  "ct_mean": -204.30307006835938,
+  "ct_std": 378.6683044433594,
+  "masked_mae_mean_hu": 104.97988913399833,
+  "masked_mae_median_hu": 102.02500915527344,
+  "masked_mae_std_hu": 26.208544380094402,
+  "masked_mae_min_hu": 67.3862533569336,
+  "masked_mae_max_hu": 189.05555725097656
+}

@@ -113,6 +113,46 @@ def show(ax, image: np.ndarray, *, vmin=None, vmax=None, cmap="gray", aspect=Non
         spine.set_visible(False)
 
 
+
+# ------------------------------------------------------ clinical sagittal pair
+def fig_clinical_sagittal(raw: dict[str, sitk.Image]) -> None:
+    """Export one clear sagittal MR/CT pair for the clinical task diagram."""
+    mr = sitk.GetArrayFromImage(raw["mr"]).astype(np.float32)
+    ct = sitk.GetArrayFromImage(raw["ct"]).astype(np.float32)
+    mask = sitk.GetArrayFromImage(raw["mask"]).astype(np.float32)
+    spacing = raw["mr"].GetSpacing()  # (x, y, z)
+
+    x = mr.shape[2] // 2
+    mr_slice = mr[:, :, x]
+    ct_slice = ct[:, :, x]
+    mask_slice = mask[:, :, x]
+    aspect = spacing[2] / spacing[1]
+    mr_hi = float(np.percentile(mr[mask > 0], 99.5))
+
+    panels = [
+        ("fig01_mri_sagittal.png", mr_slice, dict(cmap="gray", vmin=0, vmax=mr_hi)),
+        ("fig01_ct_sagittal.png", ct_slice, dict(cmap="gray", vmin=-200, vmax=300)),
+    ]
+    for filename, image, kwargs in panels:
+        fig, ax = plt.subplots(figsize=(5.4, 5.0), facecolor="black")
+        show(ax, image, aspect=aspect, **kwargs)
+        ax.contour(
+            mask_slice,
+            levels=[0.5],
+            colors=[MASK_TEAL],
+            linewidths=2.2,
+            origin="lower",
+        )
+        fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+        fig.savefig(
+            FIGURES / filename,
+            dpi=200,
+            bbox_inches="tight",
+            pad_inches=0,
+            facecolor="black",
+        )
+        plt.close(fig)
+
 # ---------------------------------------------------------------- figure 01
 def fig_mr_ct_mask(raw: dict[str, sitk.Image]) -> None:
     """One real abdomen case: MR and paired CT with the body mask overlaid."""
@@ -408,6 +448,7 @@ def fig_alignment(raw: dict[str, sitk.Image]) -> None:
 
 
 FIGURE_FUNCS = {
+    "clinical_sagittal": ("needs_raw", fig_clinical_sagittal),
     "mr_ct_mask": ("needs_raw", fig_mr_ct_mask),
     "normalization": ("needs_raw", fig_normalization),
     "patch": ("arrays_only", fig_training_patch),
@@ -445,3 +486,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

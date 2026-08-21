@@ -78,7 +78,7 @@
         <li><a href="#training"><span>06</span><strong>Training</strong><small>Update → checkpoint</small></a></li>
         <li><a href="#inference"><span>07</span><strong>Inference</strong><small>Patches → HU volume</small></a></li>
         <li><a href="#evaluation"><span>08</span><strong>Evaluation</strong><small>Numbers + images</small></a></li>
-        <li><a href="#hands-on"><span>09</span><strong>Hands-on</strong><small>Verified small run</small></a></li>
+        <li><a href="#hands-on"><span>09</span><strong>Hands-on</strong><small>Trained validation run</small></a></li>
         <li><a href="#quiz"><span>10</span><strong>Takeaways</strong><small>Check understanding</small></a></li>
       </ol>
 
@@ -88,7 +88,7 @@
           <li>Explain the role of MRI, CT, masks, and optional anatomical labels.</li>
           <li>Follow one MRI–CT case from its original files to preprocessed arrays, a saved checkpoint, and the synthetic CT.</li>
           <li>Explain the plan, 3D model, losses, training, inference, and post-processing.</li>
-          <li>Explain why a short execution check can show that the pipeline runs but cannot measure model quality.</li>
+          <li>Interpret a held-out validation result without treating it as a challenge benchmark.</li>
         </ul>
       </aside>
 
@@ -115,27 +115,31 @@
           </p>
         </div>
 
-        <figure class="teaching-figure">
-          <img src="figures/fig01_mr_ct_mask_triplanar.png"
-               alt="Aligned abdomen MRI and CT views with body-mask contours for case 1ABA033">
-          <figcaption><strong>Rows show the modalities:</strong> MRI above and CT below, both with the body-mask boundary. Columns show axial, coronal, and sagittal views of case 1ABA033. · Local public-data teaching subset</figcaption>
-        </figure>
-
-        <div class="modality-grid">
-          <article>
-            <span class="modality-tag">Input</span><h3>MRI</h3>
-            <p>Strong soft-tissue contrast, no universal physical intensity scale.</p>
-            <p class="plain-note"><strong>Role here:</strong> network input.</p>
-          </article>
-          <div class="modality-arrow" aria-hidden="true"><span>predict</span><b>→</b></div>
-          <article>
-            <span class="modality-tag">Target</span><h3>CT</h3>
-            <p>Hounsfield units carry attenuation-related numerical meaning.</p>
-            <p class="plain-note"><strong>Role here:</strong> continuous regression target.</p>
-          </article>
+        <div class="clinical-flow" aria-label="MRI-to-CT synthesis example">
+          <figure class="clinical-modality">
+            <span class="modality-tag">Input</span>
+            <img class="clinical-image" src="figures/fig01_mri_sagittal.png"
+                 alt="Sagittal MRI of SynthRAD2025 abdomen case 1ABA033 with the body-mask contour">
+            <figcaption><strong>MRI</strong><small>Soft-tissue contrast with scanner-dependent intensity.</small></figcaption>
+          </figure>
+          <div class="clinical-network" aria-label="nnsyn 3D translation network">
+            <b class="flow-arrow" aria-hidden="true">→</b>
+            <div class="network-mark">
+              <div class="unet-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <strong>nnsyn</strong>
+              <small>3D translation</small>
+            </div>
+            <b class="flow-arrow" aria-hidden="true">→</b>
+          </div>
+          <figure class="clinical-modality">
+            <span class="modality-tag">Output</span>
+            <img class="clinical-image" src="figures/fig01_ct_sagittal.png"
+                 alt="Aligned sagittal reference CT of the same SynthRAD2025 abdomen case with the body-mask contour">
+            <figcaption><strong>CT</strong><small>Aligned attenuation values expressed in Hounsfield units.</small></figcaption>
+          </figure>
         </div>
-
-        <div class="formula-card formula-intro">
+        <p class="data-caption">Sagittal MRI and CT from the same aligned public case. The teal contour shows the body mask.</p>
+<div class="formula-card formula-intro">
           <div><span class="label">Supervised image synthesis</span><code>f<sub>θ</sub>(x<sub>MR</sub>) = ŷ<sub>CT</sub></code></div>
           <dl>
             <div><dt>x<sub>MR</sub></dt><dd>input MR volume</dd></div>
@@ -252,16 +256,6 @@ checkpoint_*.pth
 training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
 
-        <div class="evidence">
-          <span class="evidence-label">A confusing inherited filename</span>
-          <div><strong><code>CASE_seg.npy</code> contains continuous CT values.</strong><p>The name suggests a segmentation map. Inspecting the stored array and the preprocessing code shows that nnsyn reuses this nnU-Net target slot for the normalized CT; the contents are not class labels.</p></div>
-        </div>
-
-        <figure class="teaching-figure">
-          <img src="figures/fig04_seg_npy_is_continuous.png"
-               alt="Inspection showing that the inherited seg array contains continuous CT values">
-          <figcaption>Local Dataset501 inspection · continuous normalized target values inside <code>1ABA033_seg.npy</code></figcaption>
-        </figure>
 
         <h3 class="subhead">Self-configuration is a sequence of decisions</h3>
         <div class="process-grid">
@@ -272,19 +266,15 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
 
         <div class="evidence evidence-plan">
-          <span class="evidence-label">Verified local plan · Dataset501</span>
+          <span class="evidence-label">Verified plan · SynthRAD2025 Task 1 abdomen training data</span>
           <dl class="stats">
             <div><dt>Spacing</dt><dd>3 × 1 × 1 mm</dd></div>
-            <div><dt>Patch</dt><dd>56 × 160 × 224</dd></div>
+            <div><dt>Patch</dt><dd>48 × 192 × 224</dd></div>
             <div><dt>Batch</dt><dd>2 patches</dd></div>
             <div><dt>Stages</dt><dd>6 encoder levels</dd></div>
           </dl>
         </div>
 
-        <div class="evidence">
-          <span class="evidence-label">Why Dataset501?</span>
-          <div><strong>Dataset501 is a local nnU-Net identifier for this teaching subset.</strong><p>It is not an official SynthRAD2025 dataset number and has no clinical meaning. Three public abdomen cases were enough to exercise every pipeline stage, but not enough to train or evaluate a useful synthesis model.</p></div>
-        </div>
 
 
         <div class="prose">
@@ -292,8 +282,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             Normalization changes the numerical scale without changing the anatomy. For case
             1ABA033, the complete MR volume has mean 277.33 and standard deviation 368.80.
             After preprocessing, the stored MR array has mean approximately 0 and standard
-            deviation 1. In this three-case subset, the selected spacing already matches the
-            data, so resampling is effectively a no-op; normalization is the visible change.
+            deviation 1. This example shows the numerical transformation applied before the
+            planned patches are sampled for training.
           </p>
         </div>
 
@@ -306,10 +296,14 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           </ol>
         </div>
 
-        <figure class="teaching-figure">
+        <div class="figure-heading">
+          <span>Normalization inspection</span>
+          <h3>Compare the intensity distributions before and after preprocessing</h3>
+        </div>
+        <figure class="teaching-figure figure-after-heading">
           <img src="figures/fig02_normalization_histograms.png"
                alt="Histograms comparing original and normalized MRI and CT intensities">
-          <figcaption>Normalization inspection from the public-data teaching subset · compare distributions before and after preprocessing</figcaption>
+          <figcaption>SynthRAD2025 Task 1 abdomen case 1ABA033 · measured from the public-data teaching case and its preprocessed arrays.</figcaption>
         </figure>
 
         <div class="checkpoint">
@@ -343,19 +337,11 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           </p>
         </div>
 
-        <div class="unet-shell" role="img" aria-label="Six-stage 3D encoder-decoder with skip connections">
-          <div class="tensor-tag">MRI patch<br><strong>B × 1 × 56 × 160 × 224</strong></div>
-          <div class="unet-grid">
-            <div class="stage enc s1"><small>encoder</small><strong>32</strong></div><div class="stage enc s2"><small>encoder</small><strong>64</strong></div>
-            <div class="stage enc s3"><small>encoder</small><strong>128</strong></div><div class="stage enc s4"><small>encoder</small><strong>256</strong></div>
-            <div class="stage enc s5"><small>encoder</small><strong>320</strong></div><div class="stage bottleneck"><small>context</small><strong>320</strong></div>
-            <div class="stage dec d5"><small>decoder</small><strong>320</strong></div><div class="stage dec d4"><small>decoder</small><strong>256</strong></div>
-            <div class="stage dec d3"><small>decoder</small><strong>128</strong></div><div class="stage dec d2"><small>decoder</small><strong>64</strong></div>
-            <div class="stage dec d1"><small>decoder</small><strong>32</strong></div>
-            <span class="skip sk1"></span><span class="skip sk2"></span><span class="skip sk3"></span><span class="skip sk4"></span><span class="skip sk5"></span>
-          </div>
-          <div class="tensor-tag">normalized CT patch<br><strong>B × 1 × 56 × 160 × 224</strong></div>
-        </div>
+        <figure class="teaching-figure architecture-figure">
+          <img src="figures/fig07_architecture_plainconvunet.png"
+               alt="Plan-derived six-stage 3D PlainConvUNet with encoder, decoder, bottleneck, and skip connections">
+          <figcaption><strong>Plan-derived architecture used in our full-data run.</strong> The static high-resolution figure can also be used in slides or manuscripts. Feature channels are shown inside each stage; spatial sizes follow the generated SynthRAD2025 abdomen plan.</figcaption>
+        </figure>
 
         <dl class="concept-list">
           <div><dt>Convolution</dt><dd>A learned 3D filter applied throughout the volume to detect local patterns.</dd></div>
@@ -365,8 +351,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <div><dt>Patch</dt><dd>A subvolume that fits in memory; the generated plan chooses its shape.</dd></div>
         </dl>
 
-        <figure class="teaching-figure"><img src="figures/fig03_training_patch.png" alt="A 3D MRI volume with a highlighted training patch"><figcaption>Dataset501 patch view · 56 × 160 × 224 voxels · one training sample is smaller than the full scan</figcaption></figure>
-        <div class="checkpoint"><strong>Architecture scope</strong><p>The local smoke plan used a six-stage PlainConvUNet. nnsyn can also plan other architectures, including residual-encoder and MedNeXt variants.</p></div>
+        
+        <div class="checkpoint"><strong>Architecture scope</strong><p>The 175-case SynthRAD2025 abdomen plan produced a six-stage PlainConvUNet with a 48 × 192 × 224 patch. nnsyn can also plan other architectures, including residual-encoder and MedNeXt variants.</p></div>
       </div>
     </section>
 
@@ -455,7 +441,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
               <tbody><tr><td>resUnet-fold0</td><td>65.9640</td><td>0.7092</td><td>9.8844</td></tr><tr><td>resUnet-MAP-fold0</td><td>64.5516</td><td>0.7436</td><td>8.2069</td></tr></tbody>
             </table>
           </div>
-          <p>These are reported validation-leaderboard rows from the KoalAI algorithm description, not results from our smoke run and not a final-test benchmark. They illustrate why anatomical metrics may reveal changes that MAE alone does not.</p>
+          <p>These are reported validation-leaderboard rows from the KoalAI algorithm description, not results from our training run and not a final-test benchmark. They illustrate why anatomical metrics may reveal changes that MAE alone does not.</p>
           <a href="https://2025.sashimiworkshop.org/program/">See the public SASHIMI program entry for Team KoalAI</a>
         </div>
 
@@ -483,10 +469,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </ol>
         <div class="comparison">
           <article><p class="label">Repository baseline</p><h3>Learning experiment</h3><dl><div><dt>epochs</dt><dd>1000</dd></div><div><dt>iterations / epoch</dt><dd>250</dd></div><div><dt>deep supervision</dt><dd>off</dd></div><div><dt>mirroring</dt><dd>disabled by the nnsyn trainer</dd></div></dl></article>
-          <article><p class="label">Course smoke run</p><h3>Execution check</h3><dl><div><dt>epochs</dt><dd>1</dd></div><div><dt>training iterations</dt><dd>2</dd></div><div><dt>validation iterations</dt><dd>1</dd></div><div><dt>purpose</dt><dd>verify the pipeline</dd></div></dl></article>
+          <article><p class="label">Course reproduction</p><h3>Trained validation experiment</h3><dl><div><dt>cases</dt><dd>140 train / 35 validation</dd></div><div><dt>epochs</dt><dd>300</dd></div><div><dt>loss</dt><dd>masked MSE</dd></div><div><dt>device</dt><dd>NVIDIA H100 80 GB</dd></div></dl></article>
         </div>
-        <div class="checkpoint"><strong>The baseline and smoke runs serve different purposes.</strong><p>The baseline protocol is intended to learn. The smoke protocol is intentionally too short to support a quality claim.</p></div>
-        <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md#smoke-training">Verified smoke-training guide</a></div>
+        <div class="checkpoint"><strong>This is a trained reproduction, not the full challenge recipe.</strong><p>It verifies that the repository can learn from the full public abdomen training set and produce a held-out synthetic CT. It does not reproduce every competition model, loss, fold, or ensemble.</p></div>
+        <div class="notebook-link"><span>Reproduce this stage</span><a href="https://github.com/zaiyouzy/nnsyn-mini-course/blob/main/code/README.md">Training and inference guide</a></div>
       </div>
     </section>
 
@@ -523,14 +509,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <div><strong>The network output is still in normalized CT space.</strong><p>Saved target statistics restore Hounsfield units. The body mask then defines the valid output region and the region used for masked evaluation.</p></div>
         </div>
 
-        <div class="case-thread">
-          <div class="case-thread-head"><span>FOLLOW ONE CASE</span><strong>1ABA033 · voxel (53, 174, 231)</strong></div>
-          <ol>
-            <li><span>Normalized prediction</span><strong>−0.156</strong><small>smoke checkpoint output</small></li>
-            <li><span>Restore CT scale</span><strong>−0.156 × 371.011 − 182.884</strong><small>saved target statistics</small></li>
-            <li><span>Predicted CT</span><strong>−240.9 HU</strong><small>after inverse normalization</small></li>
-          </ol>
-        </div>
 
         <div class="identity-lock"><strong>Model identity must match</strong><span>dataset ID</span><span>plan</span><span>configuration</span><span>trainer</span><span>fold</span><span>checkpoint</span><span>channels</span></div>
         <div class="checkpoint"><strong>Check your understanding</strong><p>The raw prediction contains values close to 0. Does that mean the synthetic CT is blank?</p><details><summary>Show answer</summary><p>No. The network predicts standardized CT values, where 0 is near the training-set mean. Apply the stored CT mean and standard deviation before interpreting the image in Hounsfield units.</p></details></div>
@@ -551,14 +529,6 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <article><span>Dice / HD95</span><h3>Is the anatomy geometrically preserved?</h3><code class="metric-formula">Dice = 2|A ∩ B| / (|A| + |B|)<br>HD95 = P<sub>95</sub>(surface distances)</code><p>Dice measures region overlap: 1 is perfect. HD95 measures how far apart most boundaries are, usually in millimeters. Both require segmentations; Dice higher and HD95 lower are better.</p></article>
         </div>
 
-        <div class="case-thread">
-          <div class="case-thread-head"><span>FOLLOW ONE CASE</span><strong>1ABA033 · voxel (53, 174, 231)</strong></div>
-          <ol>
-            <li><span>Predicted CT</span><strong>−240.9 HU</strong><small>smoke checkpoint</small></li>
-            <li><span>Reference CT</span><strong>16 HU</strong><small>aligned target</small></li>
-            <li><span>Absolute error</span><strong>256.9 HU</strong><small>|prediction − reference|</small></li>
-          </ol>
-        </div>
 
         <div class="evaluation-rule"><strong>Minimum visual panel</strong><span>MRI input</span><span>synthetic CT</span><span>reference CT</span><span>absolute error</span><p>Inspect multiple anatomical slices and include failures, not only the best-looking example.</p></div>
         <div class="checkpoint"><strong>Evaluation rule</strong><p>Use the mask definition, HU restoration, metric implementation, and case split consistently. Otherwise two reported numbers may not describe the same experiment.</p></div>
@@ -569,31 +539,32 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
     <section class="chapter chapter-tint" id="hands-on" data-chapter="09">
       <div class="chapter-side"><span class="chapter-no">09</span><p>Hands-on</p></div>
       <div class="chapter-body">
-        <p class="section-kicker">A verified public-data execution trace</p>
-        <h2>Our three-case execution check</h2>
-        <div class="prose"><p>The previous chapters describe the complete pipeline. We tested that pipeline on three public abdomen cases with a deliberately short run. Its purpose was to confirm that every stage connects, rather than to measure synthesis quality.</p></div>
+        <p class="section-kicker">A trained public-data validation result</p>
+        <h2>Training nnsyn on SynthRAD2025 abdomen data</h2>
+        <div class="prose"><p>We trained the planned 3D PlainConvUNet for 300 epochs on the 175 public SynthRAD2025 Task 1 abdomen cases. Fold 0 used 140 cases for weight updates and held out 35 cases for validation. We evaluated every held-out case after restoring the predictions to Hounsfield units and applying the body mask. Earlier chapters follow case 1ABA033 to explain the data flow; the result panel uses 1ABA101 because its MAE is closest to the validation median.</p></div>
 
         <div class="run-passport">
-          <div><p class="label">Dataset</p><strong>3 abdomen cases</strong><span>Dataset501</span></div>
-          <div><p class="label">Fold 0</p><strong>2 train / 1 held out</strong><span>1ABA033 held out from updates</span></div>
-          <div><p class="label">Training</p><strong>2 updates</strong><span>54.62 seconds</span></div>
-          <div><p class="label">Inference</p><strong>48 windows</strong><span>about 3 minutes</span></div>
+          <div><p class="label">Dataset</p><strong>175 paired cases</strong><span>SynthRAD2025 Task 1 abdomen</span></div>
+          <div><p class="label">Fold 0</p><strong>140 train / 35 validation</strong><span>all validation cases evaluated</span></div>
+          <div><p class="label">Training</p><strong>300 epochs</strong><span>best validation checkpoint</span></div>
+          <div><p class="label">Validation MAE</p><strong>105.0 HU mean</strong><span>102.0 HU median</span></div>
         </div>
         <figure class="result-figure">
-          <img src="figures/fig06_smoke_synthetic_ct.png" alt="MRI input, smoke synthetic CT, reference CT, and absolute HU error">
-          <figcaption><strong>Execution evidence only.</strong> A poor prediction after two optimizer updates was expected; the regular grid was not. Comparing the discontinuities with the window positions showed that they follow sliding-window boundaries. Masked MAE = 249.9 HU.</figcaption>
+          <img src="figures/fig06_trained_synthetic_ct.png" alt="MRI input, predicted synthetic CT, reference CT, and absolute HU error for representative held-out validation case 1ABA101">
+          <figcaption><strong>Representative held-out validation result from our trained model.</strong> Case 1ABA101 was excluded from fold 0 weight updates and had a masked MAE of 102.0 HU, close to the cohort median. Values outside the body mask are displayed as air at −1000 HU and are excluded from the error calculation. Across all 35 validation cases, mean masked MAE was 105.0 HU, median was 102.0 HU, and the range was 67.4–189.1 HU. These are one-fold validation results from our reproduction, not challenge-test results.</figcaption>
         </figure>
         <div class="comparison claims">
-          <article><p class="label">This run supports</p><ul><li>data loading and patch sampling work;</li><li>forward, MSE, backward, validation, and checkpoints connect;</li><li>inference, HU restoration, masking, and export complete.</li></ul></article>
-          <article><p class="label">This run does not support</p><ul><li>a trained-quality or generalization claim;</li><li>a challenge-comparable benchmark;</li><li>a MAP reproduction—the smoke trainer used MSE.</li></ul></article>
+          <article><p class="label">What this result shows</p><ul><li>the full-data planning and preprocessing pipeline runs;</li><li>the network learns an MRI-to-CT mapping from 140 cases;</li><li>inference, HU restoration, masking, and evaluation complete across all 35 held-out cases.</li></ul></article>
+          <article><p class="label">What it does not establish</p><ul><li>challenge-test or external-site performance;</li><li>five-fold or ensemble performance;</li><li>a reproduction of MAP loss or the complete KoalAI recipe.</li></ul></article>
         </div>
+        <div class="notebook-link"><span>Validation records</span><a href="code/results/validation_mae.csv">Per-case masked MAE</a><a href="code/results/validation_summary.json">Aggregate summary</a></div>
         <details class="field-notes">
           <summary><span>Implementation notes</span><small>supplementary evidence, not the course theme</small></summary>
           <div>
             <p><strong>Linux assumption:</strong> the trainer used <code>SIGUSR1</code>, which Windows does not provide. The local teaching path guarded this scheduler-specific behavior.</p>
-            <p><strong>Fold assumption:</strong> three cases cannot support a default five-fold split with meaningful membership, so the teaching subset uses an explicit three-fold leave-one-out split.</p>
+            
             <p><strong>Inference wrapper:</strong> <code>nnsyn_predict</code> parses options such as worker counts and TTA control but does not forward them to the lower-level predictor. The teaching script calls that predictor directly.</p>
-            <p><strong>Visible seams:</strong> strong jumps coincide with internal tile boundaries, including y = 62, 160, 222, 285 and x = 80, 239. This is a useful view of sliding-window behavior, not a quality result.</p>
+            <p><strong>Result scope:</strong> the displayed model uses the repository&apos;s masked-MSE trainer on one fold. More advanced losses, additional folds, and ensembling are separate experiments.</p>
           </div>
         </details>
       </div>
@@ -607,7 +578,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <ol class="takeaways">
           <li><span>01</span><p>The core task is continuous <strong>MRI-to-CT regression</strong>, not segmentation.</p></li>
           <li><span>02</span><p>Self-configuration connects <strong>dataset properties to a reproducible plan</strong>.</p></li>
-          <li><span>03</span><p>nnsyn routes continuous CT through an <strong>inherited target slot</strong>.</p></li>
+          <li><span>03</span><p>The generated plan records the <strong>spacing, patch size, and network configuration</strong>.</p></li>
           <li><span>04</span><p>MSE, masks, and MAP define <strong>progressively richer learning objectives</strong>.</p></li>
           <li><span>05</span><p>A valid output needs <strong>matched inference, restored HU, metrics, and visual checks</strong>.</p></li>
         </ol>
@@ -617,10 +588,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <div class="quiz-list">
             <details><summary>1 · Why are MRI and CT not just two visual styles?</summary><p>MRI intensity is acquisition-dependent; CT has calibrated HU related to X-ray attenuation. The target must be numerically meaningful.</p></details>
             <details><summary>2 · Which choices come from an nnU-Net plan?</summary><p>Spacing, patch, batch size, stages, kernels, strides, and feature channels are recorded in the generated plan.</p></details>
-            <details><summary>3 · Why is <code>CASE_seg.npy</code> not a segmentation map?</summary><p>nnsyn copies the preprocessed continuous target into an inherited target slot. The filename is inherited; the contents are continuous.</p></details>
+            <details><summary>3 · What does the generated experiment plan control?</summary><p>It records the target spacing, patch and batch sizes, network stages, feature channels, kernels, and strides used for preprocessing and training.</p></details>
             <details><summary>4 · What is unusual about the masked MSE denominator?</summary><p>Masked errors are averaged over every patch voxel N, not divided by the number of foreground voxels.</p></details>
             <details><summary>5 · What does the frozen model do in MAP loss?</summary><p>It extracts multiscale anatomical features from predicted and reference CT while its own weights stay fixed.</p></details>
-            <details><summary>6 · Why is the smoke checkpoint not a result model?</summary><p>It received only two updates. The run verifies connectivity, not learned quality, generalization, or challenge performance.</p></details>
+            <details><summary>6 · Why is one held-out image not a complete performance claim?</summary><p>It shows how the trained model behaves on one unseen validation case. A performance claim requires aggregate metrics over a defined validation or test cohort.</p></details>
           </div>
         </div>
 
@@ -644,7 +615,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
             <tbody>
               <tr><td>aehrc/nnsyn</td><td>Repository studied and executed; course code is tied to commit <code>c3ba6fd8</code>.</td><td>Australian e-Health Research Centre; Apache License 2.0.</td></tr>
               <tr><td>nnU-Net</td><td>Planning, preprocessing, training, and inference infrastructure inherited by nnsyn.</td><td>Isensee et al.; see the upstream paper and repository.</td></tr>
-              <tr><td>SynthRAD2025 Task 1</td><td>Three public abdomen MRI–CT cases and all medical-image figures. Raw scans are not redistributed.</td><td>Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0.</td></tr>
+              <tr><td>SynthRAD2025 Task 1</td><td>Public abdomen MRI–CT data; 175 paired cases were used in our fold 0 training and validation split. Raw scans are not redistributed.</td><td>Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0.</td></tr>
               <tr><td>KoalAI description</td><td>External MAP-loss validation rows in Chapter 05; these are not results from our run.</td><td>Xin et al., SynthRAD2025 algorithm description.</td></tr>
               <tr><td>Course scripts and figures</td><td>Teaching-scale execution, evaluation, and visualization created for this course.</td><td>AI assistance and human verification are described below.</td></tr>
             </tbody>
@@ -654,7 +625,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
       <div class="disclosure" id="disclosure">
         <div><p class="label">AI assistance</p><p>OpenAI Codex and Anthropic Claude assisted with course organization, English revision, HTML/CSS, and the supporting Python and PowerShell scripts. They were also used during Windows/CUDA troubleshooting and the final consistency review.</p></div>
-        <div><p class="label">Human verification and responsibility</p><p>Zaiyou He ran the reported preprocessing, smoke training, and inference steps; inspected the logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Codex and Claude did not generate the medical images or experimental measurements; these came from the public dataset and the reported nnsyn run. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.</p></div>
+        <div><p class="label">Human verification and responsibility</p><p>Zaiyou He ran the reported preprocessing, training, and held-out inference; inspected the logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Codex and Claude did not generate the medical images or experimental measurements; these came from the public dataset and the reported nnsyn run. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.</p></div>
       </div>
     </section>
 
@@ -677,3 +648,5 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
   <script src="app.js"></script>
 </body>
 </html>
+
+
