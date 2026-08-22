@@ -248,7 +248,7 @@ labelsTr/
 dataset.json</pre><p>nnU-Net naming and identity.</p></article>
           <b aria-hidden="true">→</b>
           <article><span>C</span><h3>Preprocessed</h3><pre>CASE.npy
-CASE_seg.npy
+CASE_seg.npy  # continuous CT target
 CASE_mask.npy
 nnUNetPlans.json</pre><p>Normalized arrays and plan.</p></article>
           <b aria-hidden="true">→</b>
@@ -445,6 +445,11 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <a href="https://2025.sashimiworkshop.org/program/">See the public SASHIMI program entry for Team KoalAI</a>
         </div>
 
+        <div class="comparison claims">
+          <article><p class="label">Reported winning recipe</p><h3>ResUNet-L + MAP + five folds</h3><p>KoalAI combined a large residual-encoder U-Net, Masked Anatomical Perception loss, and a five-fold ensemble. Its algorithm description reports an MAE of 62.4335 ± 23.2705 HU.</p></article>
+          <article><p class="label">Current course reproduction</p><h3>PlainConvUNet + masked MSE + one fold</h3><p>Our 300-epoch baseline reached 105.0 HU mean masked MAE on its 35-case fold-0 validation set. It verifies this simpler training path, not the complete winning recipe.</p></article>
+        </div>
+
         <div class="checkpoint">
           <strong>Check your understanding</strong>
           <p>If w = 0.5, must perception loss and image loss contribute equally sized gradients?</p>
@@ -541,7 +546,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">Our baseline reproduction</p>
         <h2>Training nnsyn on SynthRAD2025 abdomen data</h2>
-        <div class="prose"><p><strong>This is our 300-epoch masked-MSE baseline, not a challenge-winning result.</strong> We trained the planned 3D PlainConvUNet on 175 public SynthRAD2025 abdomen cases. Fold 0 used 140 cases for training and 35 for validation. The result below uses 1ABA101 because its error is closest to the validation median.</p></div>
+        <div class="prose"><p><strong>This is our 300-epoch masked-MSE baseline, not a challenge-winning result.</strong> We trained the planned 3D PlainConvUNet on 175 public SynthRAD2025 abdomen cases. Fold 0 used 140 cases for training and 35 for validation. The result below uses 1ABA101 because its error is closest to the validation median.</p><p>This experiment gives readers a complete runnable baseline and makes the remaining performance gap visible. The reported SOTA recipe is introduced in Chapter 05, but our current checkpoint should not be read as a reproduction of that recipe.</p></div>
 
         <div class="run-passport">
           <div><p class="label">Dataset</p><strong>175 paired cases</strong><span>SynthRAD2025 Task 1 abdomen</span></div>
@@ -563,7 +568,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         </div>
         <div class="notebook-link"><span>Validation results</span><a href="results.html">View the 35-case summary and per-case table</a></div>
         <details class="field-notes">
-          <summary><span>Implementation notes</span><small>supplementary evidence, not the course theme</small></summary>
+          <summary><span>Portability notes from running the repository</span><small>what changed across Windows and Linux</small></summary>
           <div>
             <p><strong>Linux assumption:</strong> the trainer used <code>SIGUSR1</code>, which Windows does not provide. The local teaching path guarded this scheduler-specific behavior.</p>
             
@@ -592,14 +597,14 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
           <div class="quiz-list">
             <details><summary>1 · Why are MRI and CT not just two visual styles?</summary><p>MRI intensity is acquisition-dependent; CT has calibrated HU related to X-ray attenuation. The target must be numerically meaningful.</p></details>
             <details><summary>2 · Which choices come from an nnU-Net plan?</summary><p>Spacing, patch, batch size, stages, kernels, strides, and feature channels are recorded in the generated plan.</p></details>
-            <details><summary>3 · What does the generated experiment plan control?</summary><p>It records the target spacing, patch and batch sizes, network stages, feature channels, kernels, and strides used for preprocessing and training.</p></details>
+            <details><summary>3 · Why does nnsyn write the CT target as <code>CASE_seg.npy</code>?</summary><p>nnsyn reuses nnU-Net's internal target slot. In this synthesis pipeline, that file contains continuous normalized CT values rather than integer segmentation labels.</p></details>
             <details><summary>4 · What is unusual about the masked MSE denominator?</summary><p>Masked errors are averaged over every patch voxel N, not divided by the number of foreground voxels.</p></details>
             <details><summary>5 · What does the frozen model do in MAP loss?</summary><p>It extracts multiscale anatomical features from predicted and reference CT while its own weights stay fixed.</p></details>
             <details><summary>6 · Why is one held-out image not a complete performance claim?</summary><p>It shows how the trained model behaves on one unseen validation case. A performance claim requires aggregate metrics over a defined validation or test cohort.</p></details>
           </div>
         </div>
 
-        <blockquote>nnsyn adapts nnU-Net’s self-configuring medical-imaging pipeline from voxel classification to paired 3D image regression, then adds synthesis-specific data handling, losses, HU restoration, and evaluation.</blockquote>
+        <blockquote>The main idea is simple: nnsyn keeps nnU-Net’s planning and training pipeline, but changes the task from classifying voxels to predicting a continuous CT value at each voxel. It also adds synthesis losses, restores predictions to HU, and evaluates them as images.</blockquote>
       </div>
     </section>
 
@@ -620,15 +625,15 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
               <tr><td>aehrc/nnsyn</td><td>Repository studied and executed; course code is tied to commit <code>c3ba6fd8</code>.</td><td>Australian e-Health Research Centre; Apache License 2.0.</td></tr>
               <tr><td>nnU-Net</td><td>Planning, preprocessing, training, and inference infrastructure inherited by nnsyn.</td><td>Isensee et al.; see the upstream paper and repository.</td></tr>
               <tr><td>SynthRAD2025 Task 1</td><td>Public abdomen MRI–CT data; 175 paired cases were used in our fold 0 training and validation split. Raw scans are not redistributed.</td><td>Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0.</td></tr>
-              <tr><td>KoalAI description</td><td>External MAP-loss validation rows in Chapter 05; these are not results from our run.</td><td>Xin et al., SynthRAD2025 algorithm description.</td></tr>
-              <tr><td>Course scripts and figures</td><td>Teaching-scale execution, evaluation, and visualization created for this course.</td><td>AI assistance and human verification are described below.</td></tr>
+              <tr><td>KoalAI description</td><td>External MAP-loss validation rows in Chapter 05; these are not results from our run.</td><td>Xin et al.; used here only as a cited numerical comparison.</td></tr>
+              <tr><td>Course scripts and figures</td><td>Data staging, local smoke checks, full-data training, evaluation, and visualization created for this course.</td><td>AI assistance and human verification are described below.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <div class="disclosure" id="disclosure">
-        <div><p class="label">AI assistance</p><p>OpenAI Codex and Anthropic Claude assisted with course organization, English revision, HTML/CSS, and the supporting Python and PowerShell scripts. They were also used during Windows/CUDA troubleshooting and the final consistency review.</p></div>
+        <div><p class="label">AI assistance</p><p>OpenAI Codex and Anthropic Claude assisted with course organization, English revision, HTML/CSS, and supporting Python, PowerShell, Bash, and Slurm files. They were used while debugging the local Windows/CUDA setup and the Linux H100 training run, and during the final consistency review.</p></div>
         <div><p class="label">Human verification and responsibility</p><p>Zaiyou He ran the reported preprocessing, training, and held-out inference; inspected the logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Codex and Claude did not generate the medical images or experimental measurements; these came from the public dataset and the reported nnsyn run. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.</p></div>
       </div>
     </section>

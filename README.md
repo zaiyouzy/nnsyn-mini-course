@@ -40,13 +40,18 @@ The course follows public SynthRAD2025 abdomen MRI–CT data through the same st
 index.html                         interactive course
 styles.css                        main visual system
 teaching-components.css           shared teaching components
-figures/                          figures generated from the public teaching subset
+figures/                          figures derived from public SynthRAD2025 data
 code/README.md                    complete reproduction instructions
-code/ENVIRONMENT.md               tested software and hardware versions
-code/run_nnsyn_smoke_training.py  bounded training execution check
-code/evaluate_trained_validation.py  35-case HU restoration, masked MAE, and Figure 06
-code/make_course_figures.py       rebuilds Figures 01–05
-code/patches/                     pinned compatibility patch and smoke trainer
+code/ENVIRONMENT.md               separate H100 and local smoke environments
+code/full_run/                    data staging, 300-epoch trainer, runner, and Slurm jobs
+code/evaluate_trained_validation.py  35-case HU restoration, masked MAE, and result figure
+code/run_nnsyn_smoke_training.py  optional bounded installation check
+code/run_smoke_inference.py       optional three-case inference check
+code/make_course_figures.py       rebuilds the data-inspection figures
+code/make_architecture_figure.py  rebuilds the network architecture figure
+code/results/                     per-case and aggregate validation records
+code/patches/                     compatibility patch and smoke trainer
+LICENSE.md                        licensing scope for course, code, and figures
 ```
 
 Raw medical images, trained weights, virtual environments, and machine-specific paths are not included.
@@ -69,6 +74,8 @@ The main result comes from our own full-data training run, not from the earlier 
 
 The representative figure uses the case nearest the cohort median, rather than the best-looking case. Predictions are restored to Hounsfield units before evaluation. Values outside the body mask are displayed as −1000 HU and excluded from masked MAE. These numbers describe one held-out validation fold; they are not challenge-test, five-fold, ensemble, external-site, or clinical-performance results.
 
+For context, the KoalAI algorithm description reports `62.4335 ± 23.2705 HU` for its five-fold ResUNet-MAP ensemble. Our 105.0 HU baseline is not comparable performance and is not presented as SOTA. The course explains the winning recipe, while the released full-run code currently reproduces the simpler one-fold masked-MSE experiment.
+
 The repository still includes the three-case smoke utilities as a quick installation and pipeline check. Their two-update output is not used as the course performance figure.
 
 Per-case values and the aggregate summary are available in [`code/results/`](code/results/).
@@ -85,7 +92,7 @@ The walkthrough was tested against nnsyn commit `c3ba6fd8b32f62779f299f78b7d78a9
 |---|---|---|
 | Course structure and English text | Codex and Claude assisted with organization, drafting, and language revision | Zaiyou He reviewed and edited the final material alongside the cited sources and run records |
 | Website and supporting scripts | Codex and Claude assisted with HTML/CSS, Python/PowerShell, and troubleshooting | The site was built locally; preprocessing, training, inference, and evaluation outputs were inspected |
-| Figures | AI assisted with plotting code and layout | Figures were generated from the public teaching data and checked against the source volumes |
+| Figures | AI assisted with plotting code and layout | Figures were generated from public SynthRAD2025 data and checked against the source volumes and run records |
 | Medical images and experimental measurements | Codex and Claude did not generate these materials | They come from SynthRAD2025 and the reported nnsyn run |
 
 Zaiyou He ran the reported preprocessing, 300-epoch training, inference, and 35-case validation; inspected the resulting logs, checkpoints, images, and numerical values; and made the final technical and editorial decisions. Jun Ma provided supervision and course feedback. The authors take responsibility for the final material.
@@ -99,10 +106,10 @@ We acknowledge the Australian e-Health Research Centre for releasing nnsyn, the 
 | [aehrc/nnsyn](https://github.com/aehrc/nnsyn) | Repository studied and executed; course code is tied to commit `c3ba6fd8` | Australian e-Health Research Centre; Apache License 2.0 |
 | [nnU-Net](https://github.com/MIC-DKFZ/nnUNet) | Planning, preprocessing, training, and inference infrastructure inherited by nnsyn | Isensee et al.; Apache License 2.0 |
 | [SynthRAD2025 Task 1](https://doi.org/10.5281/zenodo.14918089) | Public abdomen MRI–CT data and all medical-image figures | Thummerer et al.; public data and derived figures remain subject to CC BY-NC 4.0 |
-| KoalAI algorithm description | External MAP-loss validation rows in Chapter 05 | Xin et al.; these values are not results from the course run |
+| KoalAI algorithm description | External MAP-loss validation rows in Chapter 05 | Xin et al.; used only as a cited numerical comparison |
 | Course scripts and figures | Reproduction, evaluation, and visualization | AI assistance and human verification are disclosed above |
 
-No raw SynthRAD2025 scans are redistributed in this repository. The included `code/LICENSE-nnsyn.txt` is a copy of the upstream nnsyn license for reference. Course text and original tutorial layout are released under CC BY 4.0 unless otherwise stated; third-party material retains its original terms.
+No raw SynthRAD2025 scans are redistributed in this repository. See [`LICENSE.md`](LICENSE.md) for the licensing scope of the course text, original supporting code, upstream nnsyn material, and dataset-derived figures.
 
 ## Authors and contributions
 
