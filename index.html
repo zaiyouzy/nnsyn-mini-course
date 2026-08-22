@@ -109,9 +109,9 @@
             radiotherapy dose calculation.
           </p>
           <p>
-            An MRI-only workflow becomes possible if CT information can be estimated from the
-            MRI. The model predicts a CT volume aligned with the MRI, with one estimated CT
-            value at every voxel.
+            The practical goal is an MRI-only workflow that estimates the CT volume instead of
+            acquiring a separate CT. The model predicts one CT value at every MRI voxel, so the two
+            volumes remain spatially aligned.
           </p>
         </div>
 
@@ -230,9 +230,10 @@
 
         <div class="prose">
           <p>
-            Self-configuration starts with organized data. For each case, nnsyn matches the MRI,
-            reference CT, and mask using one case ID. It then converts these files into normalized
-            arrays and creates a training plan from the measured dataset properties.
+            Chapter 02 showed how nnsyn adapts nnU-Net. Before it can configure a network, it must
+            organize and measure the data. For each case, one case ID links the MRI, reference CT,
+            and mask. nnsyn then converts these files into normalized arrays and creates the training
+            plan from the measured dataset properties.
           </p>
         </div>
 
@@ -323,11 +324,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <div class="prose">
           <p>
-            The plan from Chapter 03 fixes the patch size and network depth. The network then uses
-            one MRI patch to predict one CT value at every location in the matching output patch.
-            A single MRI voxel is usually not enough, so the network also needs surrounding anatomy.
-            The encoder builds this wider context by reducing spatial resolution while increasing
-            the number of learned feature channels.
+            The plan from Chapter 03 fixes the patch size and network depth. The network has to do
+            two things at once: use enough surrounding anatomy to estimate each voxel and preserve
+            the local detail needed for accurate boundaries. The encoder builds broader context by
+            reducing spatial resolution while increasing the number of learned feature channels.
           </p>
           <p>
             The decoder restores the original resolution. Skip connections bring higher-resolution
@@ -364,10 +364,10 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
 
         <div class="prose">
           <p>
-            The network from Chapter 04 produces a CT patch. During training, the loss measures
-            how far that prediction is from the reference CT and provides the signal used to update
-            the network. MSE compares voxel values, masking limits the comparison to the body, and
-            MAP also compares anatomical features.
+            Chapter 04 ended with a predicted CT patch. Training now needs a way to judge it. A model
+            learns what its loss rewards: MSE compares voxel values, masking limits the comparison to
+            the body, and MAP also compares anatomical features. The resulting loss provides the
+            signal used to update the network.
           </p>
         </div>
 
@@ -458,7 +458,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">From one update to a checkpoint</p>
         <h2>One training iteration, step by step</h2>
-        <div class="prose"><p>Once the loss is defined, training can update the network. Each iteration loads aligned patches, predicts normalized CT, computes the loss, backpropagates the error, and changes the weights. Validation and checkpoints record how the run progresses.</p></div>
+        <div class="prose"><p>Once the loss is defined, each training iteration follows the same sequence: load aligned patches, predict normalized CT, compute the loss, backpropagate the error, and update the weights. Validation and checkpoints record how the run progresses.</p></div>
         <ol class="process-grid process-six">
           <li><span>1</span><h3>Load</h3><p>MRI, target CT, and optional mask patches.</p></li>
           <li><span>2</span><h3>Forward</h3><p>MRI patch → predicted normalized CT.</p></li>
@@ -521,7 +521,7 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
       <div class="chapter-body">
         <p class="section-kicker">Numbers and images answer different questions</p>
         <h2>How synthetic CT is evaluated</h2>
-        <div class="prose"><p>Inference produces a synthetic CT in Hounsfield units. Evaluation then asks how closely it matches the reference CT. Metrics summarize overall error, while image panels show where errors occur. Both are useful because either one can hide an important failure.</p><p>Read the metrics in three layers: MAE and PSNR assess CT intensities, MS-SSIM assesses visual structure, and Dice and HD95 assess anatomy derived from segmentations.</p></div>
+        <div class="prose"><p>Inference produces a synthetic CT in Hounsfield units. Evaluation asks how closely it matches the reference CT. A single score is not enough: metrics summarize overall error, while image panels show where those errors occur. A plausible average can still hide a failed organ boundary or a local artifact.</p><p>Read the metrics in three layers: MAE and PSNR assess CT intensities, MS-SSIM assesses visual structure, and Dice and HD95 assess anatomy derived from segmentations.</p></div>
         <div class="metric-grid">
           <article><span>MAE</span><h3>How wrong are the CT values?</h3><code class="metric-formula">MAE = (1/N) ∑ |p<sub>i</sub> − t<sub>i</sub>|</code><p>Average HU difference at the evaluated voxels. MAE = 100 HU means an average error of 100 HU per voxel. Lower is better.</p></article>
           <article><span>PSNR</span><h3>How small is the error relative to the image range?</h3><code class="metric-formula">PSNR = 20 log<sub>10</sub>(R / √MSE)</code><p>Compares reconstruction error with the stated CT intensity range R. Higher means less error relative to that range.</p></article>
