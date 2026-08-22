@@ -586,8 +586,8 @@ training_log*.txt</pre><p>Weights and run evidence.</p></article>
         <h2>Summary and knowledge check</h2>
         <ol class="takeaways">
           <li><span>01</span><p>The core task is continuous <strong>MRI-to-CT regression</strong>, not segmentation.</p></li>
-          <li><span>02</span><p>Self-configuration connects <strong>dataset properties to a reproducible plan</strong>.</p></li>
-          <li><span>03</span><p>The generated plan records the <strong>spacing, patch size, and network configuration</strong>.</p></li>
+          <li><span>02</span><p>nnsyn first <strong>measures the dataset</strong>, then uses those measurements to choose a training plan.</p></li>
+          <li><span>03</span><p>That plan fixes the <strong>spacing, patch size, batch size, and network structure</strong> used by the run.</p></li>
           <li><span>04</span><p>MSE, masks, and MAP define <strong>progressively richer learning objectives</strong>.</p></li>
           <li><span>05</span><p>A valid output needs <strong>matched inference, restored HU, metrics, and visual checks</strong>.</p></li>
         </ol>
