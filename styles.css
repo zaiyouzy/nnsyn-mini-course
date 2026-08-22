@@ -237,6 +237,7 @@ footer{padding:28px max(34px,calc((100vw - var(--max))/2 + 34px));display:flex;a
   .modality-grid{grid-template-columns:1fr}.modality-arrow{display:flex;justify-content:center;gap:10px}.modality-arrow b{transform:rotate(90deg)}
   .clinical-flow{grid-template-columns:1fr}.clinical-network{grid-template-columns:1fr;justify-items:center;padding:4px 0}.clinical-network .flow-arrow{transform:rotate(90deg)}.clinical-modality figcaption{grid-template-columns:1fr;gap:2px}
   .evidence{grid-template-columns:1fr;gap:5px}.formula-intro dl{grid-template-columns:1fr}
+  .evidence-table table{table-layout:fixed;width:100%}.evidence-table th,.evidence-table td{padding:10px 8px;overflow-wrap:anywhere}
   .folder-flow{display:flex;flex-direction:column}.folder-flow>b{transform:rotate(90deg)}
   .process-grid,.process-six,.process-five{grid-template-columns:1fr 1fr}
   .case-thread ol{grid-template-columns:1fr}.case-thread li+li{border-left:0;border-top:1px solid var(--line)}.case-thread li+li:before{left:24px;top:-11px;transform:rotate(90deg)}
