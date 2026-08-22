@@ -38,11 +38,11 @@ once this folder is pushed. Read the list before publishing.
   figures/fig07_architecture_plainconvunet.png         162.0 KB  eff334ddc1ae
   figures/fig07_architecture_plainconvunet_course_style.pdf      25.6 KB  693af63c739c
   figures/fig07_architecture_plainconvunet_course_style.png     248.0 KB  06ad59ff00a5
-  index.html                                            48.4 KB  1d21e8e413eb
+  index.html                                            48.4 KB  7ff4a588b3fc
   LICENSE.md                                             0.8 KB  0beba5e0a1f4
   README.md                                              8.7 KB  259c53187cdf
   results.html                                           5.0 KB  c8b29afa67de
-  styles.css                                            30.7 KB  22c1a234e805
+  styles.css                                            30.7 KB  2975e43c7f04
   teaching-components.css                                3.3 KB  aea77d8f1a00
 
   TOTAL                                               3524.8 KB

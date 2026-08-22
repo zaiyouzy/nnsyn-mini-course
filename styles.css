@@ -41,7 +41,7 @@ button,summary,a{outline-offset:4px}
 .hero-grid{max-width:var(--max);margin:auto;padding:76px 34px 90px;display:grid;grid-template-columns:minmax(395px,.82fr) minmax(500px,1.18fr);gap:52px;align-items:center}
 .eyebrow,.section-kicker,.label,.evidence-label{margin:0 0 12px;color:var(--teal);font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
 .hero .eyebrow,.chapter-dark .section-kicker{color:var(--mint)}
-.hero h1{margin:0;font:650 clamp(64px,8vw,112px)/.92 "Segoe UI",Arial,sans-serif;letter-spacing:-.06em}
+.hero h1{margin:0;font:650 clamp(54px,6vw,82px)/.95 "Segoe UI",Arial,sans-serif;letter-spacing:-.055em}
 .hero h1 em{color:var(--mint);font-style:normal;font-weight:650}
 .hero h1>span{display:block;max-width:650px;margin-top:22px;color:var(--white);font-size:clamp(28px,3.05vw,41px);font-weight:560;line-height:1.12;letter-spacing:-.035em}
 .hero-lede{max-width:650px;margin:26px 0 18px;color:rgba(255,255,255,.76);font-size:20px;line-height:1.55}
@@ -230,7 +230,7 @@ footer{padding:28px max(34px,calc((100vw - var(--max))/2 + 34px));display:flex;a
 }
 @media(max-width:760px){
   body{font-size:16px}.topbar{padding:20px}.top-actions>a:not(.button){display:none}
-  .hero-grid{padding:55px 20px 65px}.hero h1{font-size:clamp(58px,18vw,82px)}.hero-actions,.hero-meta{flex-wrap:wrap}.hero-statement{padding:17px 20px;display:block}.hero-statement>span{display:block;margin-bottom:7px}
+  .hero-grid{padding:55px 20px 65px}.hero h1{font-size:clamp(46px,14vw,64px)}.hero-actions,.hero-meta{flex-wrap:wrap}.hero-statement{padding:17px 20px;display:block}.hero-statement>span{display:block;margin-bottom:7px}
   .section-pad,.chapter,.chapter-tint,.chapter-dark{padding:78px 20px}
   .chapter{display:block}.chapter-side{position:static;display:flex;align-items:baseline;gap:10px;margin-bottom:24px}.chapter-side:after{display:none}.chapter-no{font-size:30px}.chapter-side p{margin:0}
   .learning-contract ul,.course-thesis,.comparison,.tensor-compare,.formula-intro,.stats,.metric-grid,.resource-grid,.disclosure,.quiz-shell{grid-template-columns:1fr}
